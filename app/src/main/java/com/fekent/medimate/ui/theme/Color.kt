@@ -1,10 +1,10 @@
 package com.fekent.medimate.ui.theme
 import androidx.compose.ui.graphics.Color
 
-val primaryLight = Color(0xFF3F6900)
-val onPrimaryLight = Color(0xFFFFFFFF)
+val primaryLight = Color(76, 102, 43)
+val onPrimaryLight = Color(16, 32, 0)
 val primaryContainerLight = Color(0xFF6FAE19)
-val onPrimaryContainerLight = Color(0xFF071200)
+val onPrimaryContainerLight = Color(16, 32, 0)
 val secondaryLight = Color(0xFF4B662A)
 val onSecondaryLight = Color(0xFFFFFFFF)
 val secondaryContainerLight = Color(0xFFD0F2A5)
@@ -31,10 +31,10 @@ val inverseOnSurfaceLight = Color(0xFFEFF3E2)
 val inversePrimaryLight = Color(0xFF97D945)
 
 
-val primaryDark = Color(0xFF97D945)
+val primaryDark = Color(177, 209, 138)
 val onPrimaryDark = Color(0xFF1F3700)
 val primaryContainerDark = Color(0xFF4F8200)
-val onPrimaryContainerDark = Color(0xFFFFFFFF)
+val onPrimaryContainerDark = Color(205, 237, 163)
 val secondaryDark = Color(0xFFB1D188)
 val onSecondaryDark = Color(0xFF1F3700)
 val secondaryContainerDark = Color(0xFF2C460C)

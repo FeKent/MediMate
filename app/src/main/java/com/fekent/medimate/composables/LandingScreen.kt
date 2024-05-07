@@ -4,6 +4,7 @@ package com.fekent.medimate.composables
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,11 +16,14 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -135,15 +139,62 @@ fun LandingScreen(settings: () -> Unit) {
                 )
             }
         }
-        MedicationRow(number = 1,)
+        Column(
+            modifier = Modifier
+                .height(175.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            MedicationRow(number = 1, "Sertraline", 100)
+            MedicationRow(number = 2, medicationName = "Paracetamol", dose = 50)
+
+        }
+
     }
 }
 
 @Composable
-fun MedicationRow(number: Int,) {
-    Column {
-        Row {
-            Text(text = number.toString())
+fun MedicationRow(number: Int, medicationName: String, dose: Int) {
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 30.dp, vertical = 4.dp)
+            .background(color = MaterialTheme.colorScheme.primaryContainer)
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(10.dp)
+                .fillMaxWidth(), horizontalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = number.toString(),
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.secondary,
+                modifier = Modifier.weight(0.3f)
+            )
+            Divider(
+                color = MaterialTheme.colorScheme.secondary,
+                modifier = Modifier
+                    .height(21.dp)
+                    .width(2.dp)
+            )
+            Text(
+                text = medicationName,
+                fontWeight = FontWeight.SemiBold,
+                textAlign = TextAlign.Center,
+                color = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimary else Color(53, 78, 22),
+                modifier = Modifier.weight(1f)
+            )
+            Divider(
+                color = MaterialTheme.colorScheme.secondary,
+                modifier = Modifier
+                    .height(21.dp)
+                    .width(2.dp)
+            )
+            Text(
+                text = "$dose mg",
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.secondary,
+                modifier = Modifier.weight(0.5f)
+            )
         }
     }
 }
