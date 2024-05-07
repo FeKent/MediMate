@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -45,6 +46,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fekent.medimate.R
 import com.fekent.medimate.ui.theme.MediMateTheme
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun LandingScreen(settings: () -> Unit) {
@@ -148,7 +152,69 @@ fun LandingScreen(settings: () -> Unit) {
             MedicationRow(number = 2, medicationName = "Paracetamol", dose = 50)
 
         }
+        Divider(
+            Modifier
+                .padding(horizontal = 40.dp)
+                .background(color = MaterialTheme.colorScheme.primary)
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(IntrinsicSize.Max),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            Text(
+                text = "Order Refill Dates",
+                fontWeight = FontWeight.Bold,
+                fontSize = 26.sp,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.align(Alignment.CenterVertically)
+            )
+        }
+        Divider(
+            Modifier
+                .padding(horizontal = 40.dp)
+                .background(color = MaterialTheme.colorScheme.primary)
+        )
+        Spacer(Modifier.size(20.dp))
+        val exampleDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse("07/07/2024")!!
+        MedicationRefill(number = 1, exampleDate)
 
+    }
+}
+
+@Composable
+fun MedicationRefill(number: Int, date: Date) {
+    val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(date)
+
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 30.dp, vertical = 4.dp)
+            .background(color = MaterialTheme.colorScheme.surfaceVariant)
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(10.dp)
+                .fillMaxWidth(), horizontalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = number.toString(), textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                modifier = Modifier.weight(0.3f)
+            )
+            Divider(
+                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                modifier = Modifier
+                    .height(21.dp)
+                    .width(2.dp)
+            )
+            Text(
+                text = formattedDate, fontWeight = FontWeight.SemiBold,
+                textAlign = TextAlign.Center,
+                color =  MaterialTheme.colorScheme.onSecondaryContainer,
+                modifier = Modifier.weight(1f)
+            )
+        }
     }
 }
 
@@ -180,7 +246,11 @@ fun MedicationRow(number: Int, medicationName: String, dose: Int) {
                 text = medicationName,
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center,
-                color = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimary else Color(53, 78, 22),
+                color = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimary else Color(
+                    53,
+                    78,
+                    22
+                ),
                 modifier = Modifier.weight(1f)
             )
             Divider(
