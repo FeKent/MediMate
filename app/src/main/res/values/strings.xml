@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MediMate</string>
+    <string name="info">Info and instructions about the app, I\'m not yet sure what it\'s gonna say, but it will be profound</string>
 </resources>

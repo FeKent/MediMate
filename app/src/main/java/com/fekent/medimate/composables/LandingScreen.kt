@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,6 +32,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -43,7 +45,7 @@ import com.fekent.medimate.ui.theme.MediMateTheme
 @Composable
 fun LandingScreen(settings: () -> Unit) {
 
-    val username = "User"
+    val username = "Snippy"
 
     Column(Modifier.fillMaxWidth()) {
         LandingBar { settings() }
@@ -71,7 +73,7 @@ fun LandingScreen(settings: () -> Unit) {
                     .height(100.dp)
             ) {
                 Text(
-                    text = "Welcome, $username",
+                    text = "Welcome, $username!",
                     fontSize = 24.sp,
                     overflow = TextOverflow.Clip,
                     textAlign = TextAlign.Center,
@@ -91,9 +93,62 @@ fun LandingScreen(settings: () -> Unit) {
                     .align(Alignment.CenterVertically)
             )
         }
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 40.dp)
+                .background(
+                    color = MaterialTheme.colorScheme.tertiaryContainer,
+                    shape = RoundedCornerShape(46.dp)
+                )
+        ) {
+            Text(
+                text = stringResource(id = R.string.info),
+                textAlign = TextAlign.Center,
+                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.tertiary,
+                modifier = Modifier.padding(20.dp)
+            )
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)
+                .height(IntrinsicSize.Max),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            Text(
+                text = "MEDICATION",
+                fontWeight = FontWeight.Bold,
+                fontSize = 30.sp,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.align(Alignment.CenterVertically)
+            )
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(
+                    Icons.Filled.AddCircle,
+                    "Add",
+                    tint = MaterialTheme.colorScheme.secondary,
+                    modifier = Modifier
+                        .size(100.dp)
+                        .align(Alignment.CenterVertically)
+                        .weight(1f)
+                )
+            }
+        }
+        MedicationRow(number = 1,)
     }
 }
 
+@Composable
+fun MedicationRow(number: Int,) {
+    Column {
+        Row {
+            Text(text = number.toString())
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LandingBar(settings: () -> Unit) {
     CenterAlignedTopAppBar(
