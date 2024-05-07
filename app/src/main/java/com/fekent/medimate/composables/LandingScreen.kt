@@ -117,6 +117,7 @@ fun LandingScreen(settings: () -> Unit) {
                 modifier = Modifier.padding(20.dp)
             )
         }
+        Spacer(Modifier.size(20.dp))
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -179,7 +180,6 @@ fun LandingScreen(settings: () -> Unit) {
         Spacer(Modifier.size(20.dp))
         val exampleDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse("07/07/2024")!!
         MedicationRefill(number = 1, exampleDate)
-
     }
 }
 
@@ -211,7 +211,7 @@ fun MedicationRefill(number: Int, date: Date) {
             Text(
                 text = formattedDate, fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center,
-                color =  MaterialTheme.colorScheme.onSecondaryContainer,
+                color = MaterialTheme.colorScheme.onSecondaryContainer,
                 modifier = Modifier.weight(1f)
             )
         }
@@ -268,6 +268,7 @@ fun MedicationRow(number: Int, medicationName: String, dose: Int) {
         }
     }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
