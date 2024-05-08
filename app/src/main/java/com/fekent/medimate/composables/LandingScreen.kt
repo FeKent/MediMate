@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -22,6 +23,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Divider
@@ -51,7 +53,7 @@ import java.util.Date
 import java.util.Locale
 
 @Composable
-fun LandingScreen(settings: () -> Unit) {
+fun LandingScreen(settings: () -> Unit, calendar: () -> Unit) {
 
     val username = "Snippy"
 
@@ -117,7 +119,6 @@ fun LandingScreen(settings: () -> Unit) {
                 modifier = Modifier.padding(20.dp)
             )
         }
-        Spacer(Modifier.size(20.dp))
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -185,15 +186,37 @@ fun LandingScreen(settings: () -> Unit) {
                 .background(color = MaterialTheme.colorScheme.primary)
         )
         Spacer(Modifier.size(20.dp))
-        Column(modifier = Modifier
-            .height(125.dp)
-            .verticalScroll(rememberScrollState())) {
-            val exampleDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse("07/07/2024")!!
+        Column(
+            modifier = Modifier
+                .height(125.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            val exampleDate =
+                SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse("07/07/2024")!!
             MedicationRefill(number = 1, exampleDate)
             MedicationRefill(number = 1, exampleDate)
             MedicationRefill(number = 1, exampleDate)
             MedicationRefill(number = 1, exampleDate)
             MedicationRefill(number = 1, exampleDate)
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = { calendar() }) {
+                Icon(
+                    Icons.Filled.DateRange,
+                    "Calendar",
+                    modifier = Modifier
+                        .height(100.dp)
+                        .width(100.dp)
+                        .weight(1f),
+                    tint = MaterialTheme.colorScheme.secondary
+                )
+            }
         }
     }
 }
@@ -301,7 +324,12 @@ fun LandingBar(settings: () -> Unit) {
         },
         actions = {
             IconButton(onClick = { settings() }) {
-                Icon(Icons.Filled.Settings, "Settings", tint = MaterialTheme.colorScheme.secondary)
+                Icon(
+                    Icons.Filled.Settings,
+                    "Settings",
+                    tint = MaterialTheme.colorScheme.secondary,
+                    modifier = Modifier.size(60.dp)
+                )
             }
         },
         modifier = Modifier
@@ -315,6 +343,6 @@ fun LandingBar(settings: () -> Unit) {
 @Composable
 fun LandingPreview() {
     MediMateTheme {
-        LandingScreen {}
+        LandingScreen({}, {})
     }
 }

@@ -40,7 +40,7 @@ fun MediMate(navController: NavHostController) {
 
     NavHost(navController = navController, startDestination = Screen.Landing.route) {
         composable(Screen.Landing.route) {
-            LandingScreen(settings = { navController.navigate(Screen.Settings.route) })
+            LandingScreen(settings = { navController.navigate(Screen.Settings.route) }, calendar = {})
         }
         composable(Screen.Settings.route) {}
     }
