@@ -210,7 +210,8 @@ fun LandingScreen(settings: () -> Unit, calendar: () -> Unit) {
                 painter = painterResource(id = R.drawable.plants),
                 contentDescription = "Plants",
                 modifier = Modifier
-                    .offset(y = 20.dp, x = (-50).dp)
+                    .align(Alignment.Bottom)
+                    .offset(x = (-50).dp)
             )
             IconButton(onClick = { calendar() }) {
                 Icon(
@@ -227,8 +228,9 @@ fun LandingScreen(settings: () -> Unit, calendar: () -> Unit) {
                 painter = painterResource(id = R.drawable.plants),
                 contentDescription = "Plants",
                 modifier = Modifier
+                    .align(Alignment.Bottom)
                     .graphicsLayer { rotationY = 180f }
-                    .offset(y = 20.dp, x = (-50).dp)
+                    .offset(x = (-50).dp)
             )
         }
     }
