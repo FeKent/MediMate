@@ -146,13 +146,20 @@ fun LandingScreen(settings: () -> Unit) {
         }
         Column(
             modifier = Modifier
-                .height(175.dp)
+                .height(125.dp)
                 .verticalScroll(rememberScrollState())
         ) {
             MedicationRow(number = 1, "Sertraline", 100)
             MedicationRow(number = 2, medicationName = "Paracetamol", dose = 50)
+            MedicationRow(number = 2, medicationName = "Paracetamol", dose = 50)
+            MedicationRow(number = 2, medicationName = "Paracetamol", dose = 50)
+            MedicationRow(number = 2, medicationName = "Paracetamol", dose = 50)
+            MedicationRow(number = 2, medicationName = "Paracetamol", dose = 50)
+            MedicationRow(number = 2, medicationName = "Paracetamol", dose = 50)
+            MedicationRow(number = 2, medicationName = "Paracetamol", dose = 50)
 
         }
+        Spacer(Modifier.size(16.dp))
         Divider(
             Modifier
                 .padding(horizontal = 40.dp)
@@ -178,8 +185,16 @@ fun LandingScreen(settings: () -> Unit) {
                 .background(color = MaterialTheme.colorScheme.primary)
         )
         Spacer(Modifier.size(20.dp))
-        val exampleDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse("07/07/2024")!!
-        MedicationRefill(number = 1, exampleDate)
+        Column(modifier = Modifier
+            .height(125.dp)
+            .verticalScroll(rememberScrollState())) {
+            val exampleDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse("07/07/2024")!!
+            MedicationRefill(number = 1, exampleDate)
+            MedicationRefill(number = 1, exampleDate)
+            MedicationRefill(number = 1, exampleDate)
+            MedicationRefill(number = 1, exampleDate)
+            MedicationRefill(number = 1, exampleDate)
+        }
     }
 }
 
