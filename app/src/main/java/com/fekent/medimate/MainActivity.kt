@@ -23,7 +23,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MediMateTheme {
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
                     MediMate(navController = rememberNavController())
                 }
             }
@@ -45,13 +48,18 @@ fun MediMate(navController: NavHostController) {
 
     NavHost(navController = navController, startDestination = Screen.Landing.route) {
         composable(Screen.Landing.route) {
-            LandingScreen(settings = { navController.navigate(Screen.Settings.route) }, calendar = {})
+            LandingScreen(
+                settings = { navController.navigate(Screen.Settings.route) },
+                calendar = { navController.navigate(Screen.Calendar.route)},
+                addMeds = { navController.navigate(Screen.AddMeds.route)},
+                medication = {navController.navigate(Screen.Medication.route)}
+            )
         }
         composable(Screen.Settings.route) {
-            SettingsScreen(back = {navController.navigate(Screen.Landing.route)})
+            SettingsScreen(back = { navController.navigate(Screen.Landing.route)})
         }
-        composable(Screen.AddMeds.route){}
-        composable(Screen.Calendar.route){}
-        composable(Screen.Medication.route){}
+        composable(Screen.AddMeds.route) {}
+        composable(Screen.Calendar.route) {}
+        composable(Screen.Medication.route) {}
     }
 }

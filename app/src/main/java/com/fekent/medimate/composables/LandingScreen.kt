@@ -4,6 +4,7 @@ package com.fekent.medimate.composables
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -53,7 +54,7 @@ import java.util.Date
 import java.util.Locale
 
 @Composable
-fun LandingScreen(settings: () -> Unit, calendar: () -> Unit) {
+fun LandingScreen(settings: () -> Unit, calendar: () -> Unit, addMeds: () ->Unit, medication: () -> Unit) {
 
     val username = "Snippy"
 
@@ -133,7 +134,7 @@ fun LandingScreen(settings: () -> Unit, calendar: () -> Unit) {
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.align(Alignment.CenterVertically)
             )
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = { addMeds() }) {
                 Icon(
                     Icons.Filled.AddCircle,
                     "Add",
@@ -150,14 +151,8 @@ fun LandingScreen(settings: () -> Unit, calendar: () -> Unit) {
                 .height(125.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            MedicationRow(number = 1, "Sertraline", 100)
-            MedicationRow(number = 2, medicationName = "Paracetamol", dose = 50)
-            MedicationRow(number = 2, medicationName = "Paracetamol", dose = 50)
-            MedicationRow(number = 2, medicationName = "Paracetamol", dose = 50)
-            MedicationRow(number = 2, medicationName = "Paracetamol", dose = 50)
-            MedicationRow(number = 2, medicationName = "Paracetamol", dose = 50)
-            MedicationRow(number = 2, medicationName = "Paracetamol", dose = 50)
-            MedicationRow(number = 2, medicationName = "Paracetamol", dose = 50)
+            MedicationRow(number = 1, "Sertraline", 100, medication = { medication() })
+            MedicationRow(number = 2, medicationName = "Paracetamol", dose = 50, medication = { medication() })
 
         }
         Spacer(Modifier.size(16.dp))
@@ -272,7 +267,7 @@ fun MedicationRefill(number: Int, date: Date) {
 }
 
 @Composable
-fun MedicationRow(number: Int, medicationName: String, dose: Int) {
+fun MedicationRow(number: Int, medicationName: String, dose: Int, medication: () -> Unit) {
     Column(
         modifier = Modifier
             .padding(horizontal = 30.dp, vertical = 4.dp)
@@ -281,6 +276,7 @@ fun MedicationRow(number: Int, medicationName: String, dose: Int) {
         Row(
             modifier = Modifier
                 .padding(10.dp)
+                .clickable { medication() }
                 .fillMaxWidth(), horizontalArrangement = Arrangement.Center
         ) {
             Text(
@@ -358,6 +354,6 @@ fun LandingBar(settings: () -> Unit) {
 @Composable
 fun LandingPreview() {
     MediMateTheme {
-        LandingScreen({}, {})
+        LandingScreen({}, {}, {}, {})
     }
 }
