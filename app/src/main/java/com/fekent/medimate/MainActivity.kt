@@ -34,6 +34,10 @@ class MainActivity : ComponentActivity() {
 sealed class Screen(val route: String) {
     object Landing : Screen("Landing")
     object Settings : Screen("Settings")
+    object AddMeds : Screen("AddMeds")
+    object Calendar : Screen("Calendar")
+    object Medication : Screen("Medication")
+
 }
 
 @Composable
@@ -46,5 +50,8 @@ fun MediMate(navController: NavHostController) {
         composable(Screen.Settings.route) {
             SettingsScreen(back = {navController.navigate(Screen.Landing.route)})
         }
+        composable(Screen.AddMeds.route){}
+        composable(Screen.Calendar.route){}
+        composable(Screen.Medication.route){}
     }
 }
