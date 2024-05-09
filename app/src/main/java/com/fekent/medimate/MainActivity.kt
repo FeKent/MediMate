@@ -14,6 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.fekent.medimate.composables.LandingScreen
+import com.fekent.medimate.composables.SettingsScreen
 import com.fekent.medimate.ui.theme.MediMateTheme
 
 class MainActivity : ComponentActivity() {
@@ -42,6 +43,8 @@ fun MediMate(navController: NavHostController) {
         composable(Screen.Landing.route) {
             LandingScreen(settings = { navController.navigate(Screen.Settings.route) }, calendar = {})
         }
-        composable(Screen.Settings.route) {}
+        composable(Screen.Settings.route) {
+            SettingsScreen(back = {navController.navigate(Screen.Landing.route)})
+        }
     }
 }
