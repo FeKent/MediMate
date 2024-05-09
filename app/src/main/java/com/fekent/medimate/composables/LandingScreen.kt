@@ -48,6 +48,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fekent.medimate.R
+import com.fekent.medimate.data.Meds
+import com.fekent.medimate.data.meds
 import com.fekent.medimate.ui.theme.MediMateTheme
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -151,8 +153,11 @@ fun LandingScreen(settings: () -> Unit, calendar: () -> Unit, addMeds: () ->Unit
                 .height(125.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            MedicationRow(number = 1, "Sertraline", 100, medication = { medication() })
-            MedicationRow(number = 2, medicationName = "Paracetamol", dose = 50, medication = { medication() })
+            meds.forEach{ item ->
+                MedicationRow(meds = item) {
+                    
+                }
+            }
 
         }
         Spacer(Modifier.size(16.dp))
@@ -267,7 +272,7 @@ fun MedicationRefill(number: Int, date: Date) {
 }
 
 @Composable
-fun MedicationRow(number: Int, medicationName: String, dose: Int, medication: () -> Unit) {
+fun MedicationRow(meds: Meds, medication: () -> Unit) {
     Column(
         modifier = Modifier
             .padding(horizontal = 30.dp, vertical = 4.dp)
@@ -280,7 +285,7 @@ fun MedicationRow(number: Int, medicationName: String, dose: Int, medication: ()
                 .fillMaxWidth(), horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = number.toString(),
+                text = meds.id.toString() ,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.secondary,
                 modifier = Modifier.weight(0.3f)
@@ -292,7 +297,7 @@ fun MedicationRow(number: Int, medicationName: String, dose: Int, medication: ()
                     .width(2.dp)
             )
             Text(
-                text = medicationName,
+                text = meds.name,
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center,
                 color = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimary else Color(
@@ -309,7 +314,7 @@ fun MedicationRow(number: Int, medicationName: String, dose: Int, medication: ()
                     .width(2.dp)
             )
             Text(
-                text = "$dose mg",
+                text = "${meds.dose} mg",
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.secondary,
                 modifier = Modifier.weight(0.5f)
