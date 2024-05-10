@@ -13,6 +13,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.fekent.medimate.composables.CalendarScreen
 import com.fekent.medimate.composables.LandingScreen
 import com.fekent.medimate.composables.SettingsScreen
 import com.fekent.medimate.ui.theme.MediMateTheme
@@ -50,16 +51,16 @@ fun MediMate(navController: NavHostController) {
         composable(Screen.Landing.route) {
             LandingScreen(
                 settings = { navController.navigate(Screen.Settings.route) },
-                calendar = { navController.navigate(Screen.Calendar.route)},
-                addMeds = { navController.navigate(Screen.AddMeds.route)},
-                medication = {navController.navigate(Screen.Medication.route)}
+                calendar = { navController.navigate(Screen.Calendar.route) },
+                addMeds = { navController.navigate(Screen.AddMeds.route) },
+                medication = { navController.navigate(Screen.Medication.route) }
             )
         }
         composable(Screen.Settings.route) {
-            SettingsScreen(back = { navController.navigate(Screen.Landing.route)})
+            SettingsScreen(back = { navController.navigate(Screen.Landing.route) })
         }
         composable(Screen.AddMeds.route) {}
-        composable(Screen.Calendar.route) {}
+        composable(Screen.Calendar.route) { CalendarScreen(back = { navController.navigate(Screen.Landing.route) }) }
         composable(Screen.Medication.route) {}
     }
 }
