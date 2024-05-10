@@ -144,6 +144,7 @@ fun SettingsScreen(back: () -> Unit) {
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsBar(back: () -> Unit) {
     CenterAlignedTopAppBar(
