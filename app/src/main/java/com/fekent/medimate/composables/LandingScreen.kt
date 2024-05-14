@@ -2,6 +2,8 @@
 
 package com.fekent.medimate.composables
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -51,10 +53,8 @@ import com.fekent.medimate.R
 import com.fekent.medimate.data.Meds
 import com.fekent.medimate.data.meds
 import com.fekent.medimate.ui.theme.MediMateTheme
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun LandingScreen(settings: () -> Unit, calendar: () -> Unit, addMeds: () ->Unit, medication: () -> Unit) {
 
@@ -155,7 +155,7 @@ fun LandingScreen(settings: () -> Unit, calendar: () -> Unit, addMeds: () ->Unit
         ) {
             meds.forEach{ item ->
                 MedicationRow(meds = item) {
-                    
+                    medication()
                 }
             }
 
@@ -191,13 +191,9 @@ fun LandingScreen(settings: () -> Unit, calendar: () -> Unit, addMeds: () ->Unit
                 .height(125.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            val exampleDate =
-                SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse("07/07/2024")!!
-            MedicationRefill(number = 1, exampleDate)
-            MedicationRefill(number = 1, exampleDate)
-            MedicationRefill(number = 1, exampleDate)
-            MedicationRefill(number = 1, exampleDate)
-            MedicationRefill(number = 1, exampleDate)
+            meds.forEach{item ->
+                MedicationRefill(meds = item)
+            }
         }
         Row(
             modifier = Modifier
@@ -237,8 +233,7 @@ fun LandingScreen(settings: () -> Unit, calendar: () -> Unit, addMeds: () ->Unit
 }
 
 @Composable
-fun MedicationRefill(number: Int, date: Date) {
-    val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(date)
+fun MedicationRefill(meds: Meds) {
 
     Column(
         modifier = Modifier
@@ -251,7 +246,7 @@ fun MedicationRefill(number: Int, date: Date) {
                 .fillMaxWidth(), horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = number.toString(), textAlign = TextAlign.Center,
+                text = meds.id.toString(), textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSecondaryContainer,
                 modifier = Modifier.weight(0.3f)
             )
@@ -262,7 +257,7 @@ fun MedicationRefill(number: Int, date: Date) {
                     .width(2.dp)
             )
             Text(
-                text = formattedDate, fontWeight = FontWeight.SemiBold,
+                text = meds.refill.toString(), fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSecondaryContainer,
                 modifier = Modifier.weight(1f)
@@ -355,6 +350,7 @@ fun LandingBar(settings: () -> Unit) {
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showSystemUi = true)
 @Composable
 fun LandingPreview() {
