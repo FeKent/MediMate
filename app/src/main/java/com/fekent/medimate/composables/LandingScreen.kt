@@ -53,6 +53,8 @@ import com.fekent.medimate.R
 import com.fekent.medimate.data.Meds
 import com.fekent.medimate.data.meds
 import com.fekent.medimate.ui.theme.MediMateTheme
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -192,7 +194,7 @@ fun LandingScreen(settings: () -> Unit, calendar: () -> Unit, addMeds: () ->Unit
                 .verticalScroll(rememberScrollState())
         ) {
             meds.forEach{item ->
-                MedicationRefill(meds = item)
+                MedicationRefill(meds = item, dateString = item.refill.toString())
             }
         }
         Row(
@@ -232,8 +234,12 @@ fun LandingScreen(settings: () -> Unit, calendar: () -> Unit, addMeds: () ->Unit
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MedicationRefill(meds: Meds) {
+fun MedicationRefill(meds: Meds, dateString: String) {
+    val date = LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE)
+    val formattedDate = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(date)
+
 
     Column(
         modifier = Modifier
@@ -257,7 +263,7 @@ fun MedicationRefill(meds: Meds) {
                     .width(2.dp)
             )
             Text(
-                text = meds.refill.toString(), fontWeight = FontWeight.SemiBold,
+                text = formattedDate, fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSecondaryContainer,
                 modifier = Modifier.weight(1f)
