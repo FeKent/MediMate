@@ -69,168 +69,172 @@ fun LandingScreen(
 
     Column(Modifier.fillMaxWidth()) {
         LandingBar { settings() }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp)
-                .height(IntrinsicSize.Max)
-                .background(
-                    color = MaterialTheme.colorScheme.surfaceVariant,
-                    shape = RoundedCornerShape(10.dp)
-                ),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.plants),
-                contentDescription = "plant leaves",
+        Column(Modifier.verticalScroll(rememberScrollState())) {
+            Row(
                 modifier = Modifier
-                    .size(100.dp)
-                    .offset(x = (-19).dp)
-                    .graphicsLayer { rotationZ = 90f }
-            )
-            Text(
-                text = "Welcome, $username!",
-                fontSize = 24.sp,
-                overflow = TextOverflow.Clip,
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onSecondaryContainer,
-                modifier = Modifier
-                    .weight(1f)
-            )
-            Image(
-                painter = painterResource(id = R.drawable.plants),
-                contentDescription = "plant leaves",
-                modifier = Modifier
-                    .size(100.dp)
-                    .offset(19.dp)
-                    .graphicsLayer { rotationY = 180f; rotationZ = 90f; }
-                    .align(Alignment.CenterVertically)
-            )
-        }
-        Row(
-            modifier = Modifier
-                .padding(horizontal = 40.dp)
-                .background(
-                    color = MaterialTheme.colorScheme.tertiaryContainer,
-                    shape = RoundedCornerShape(46.dp)
-                )
-        ) {
-            Text(
-                text = stringResource(id = R.string.info),
-                textAlign = TextAlign.Center,
-                fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.tertiary,
-                modifier = Modifier.padding(20.dp)
-            )
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp)
-                .height(IntrinsicSize.Max),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            Text(
-                text = "MEDICATION",
-                fontWeight = FontWeight.Bold,
-                fontSize = 30.sp,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.align(Alignment.CenterVertically)
-            )
-            IconButton(onClick = { addMeds() }) {
-                Icon(
-                    Icons.Filled.AddCircle,
-                    "Add",
-                    tint = MaterialTheme.colorScheme.secondary,
+                    .fillMaxWidth()
+                    .padding(20.dp)
+                    .height(IntrinsicSize.Max)
+                    .background(
+                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        shape = RoundedCornerShape(10.dp)
+                    ),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.plants),
+                    contentDescription = "plant leaves",
                     modifier = Modifier
                         .size(100.dp)
-                        .align(Alignment.CenterVertically)
+                        .offset(x = (-19).dp)
+                        .graphicsLayer { rotationZ = 90f }
+                )
+                Text(
+                    text = "Welcome, $username!",
+                    fontSize = 24.sp,
+                    overflow = TextOverflow.Clip,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer,
+                    modifier = Modifier
                         .weight(1f)
                 )
-            }
-        }
-        Column(
-            modifier = Modifier
-                .height(125.dp)
-                .verticalScroll(rememberScrollState())
-        ) {
-            meds.forEach { item ->
-                MedicationRow(meds = item) {
-                    medication()
-                }
-            }
-
-        }
-        Spacer(Modifier.size(16.dp))
-        HorizontalDivider(
-            Modifier
-                .padding(horizontal = 40.dp)
-                .background(color = MaterialTheme.colorScheme.primary)
-        )
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(IntrinsicSize.Max),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            Text(
-                text = "Order Refill Dates",
-                fontWeight = FontWeight.Bold,
-                fontSize = 26.sp,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.align(Alignment.CenterVertically)
-            )
-        }
-        HorizontalDivider(
-            Modifier
-                .padding(horizontal = 40.dp)
-                .background(color = MaterialTheme.colorScheme.primary)
-        )
-        Spacer(Modifier.size(20.dp))
-        Column(
-            modifier = Modifier
-                .height(125.dp)
-                .verticalScroll(rememberScrollState())
-        ) {
-            meds.forEach { item ->
-                MedicationRefill(meds = item, dateString = item.refill.toString())
-            }
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.plants),
-                contentDescription = "Plants",
-                modifier = Modifier
-                    .align(Alignment.Bottom)
-                    .offset(x = (-50).dp)
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            IconButton(onClick = { calendar() }) {
-                Icon(
-                    Icons.Filled.DateRange,
-                    "Calendar",
+                Image(
+                    painter = painterResource(id = R.drawable.plants),
+                    contentDescription = "plant leaves",
                     modifier = Modifier
-                        .height(100.dp)
-                        .width(100.dp),
-                    tint = MaterialTheme.colorScheme.secondary
+                        .size(100.dp)
+                        .offset(19.dp)
+                        .graphicsLayer { rotationY = 180f; rotationZ = 90f; }
+                        .align(Alignment.CenterVertically)
                 )
             }
-            Spacer(modifier = Modifier.weight(1f))
-            Image(
-                painter = painterResource(id = R.drawable.plants),
-                contentDescription = "Plants",
+            Row(
                 modifier = Modifier
-                    .align(Alignment.Bottom)
-                    .graphicsLayer { rotationY = 180f }
-                    .offset(x = (-50).dp)
+                    .fillMaxWidth()
+                    .padding(horizontal = 40.dp)
+                    .background(
+                        color = MaterialTheme.colorScheme.tertiaryContainer,
+                        shape = RoundedCornerShape(46.dp)
+                    ),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = stringResource(id = R.string.info),
+                    textAlign = TextAlign.Center,
+                    fontSize = 16.sp,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    modifier = Modifier.padding(20.dp)
+                )
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp)
+                    .height(IntrinsicSize.Max),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Text(
+                    text = "MEDICATION",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 30.sp,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.align(Alignment.CenterVertically)
+                )
+                IconButton(onClick = { addMeds() }) {
+                    Icon(
+                        Icons.Filled.AddCircle,
+                        "Add",
+                        tint = MaterialTheme.colorScheme.secondary,
+                        modifier = Modifier
+                            .size(100.dp)
+                            .align(Alignment.CenterVertically)
+                            .weight(1f)
+                    )
+                }
+            }
+            Column(
+                modifier = Modifier
+                    .height(125.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                meds.forEach { item ->
+                    MedicationRow(meds = item) {
+                        medication()
+                    }
+                }
+
+            }
+            Spacer(Modifier.size(16.dp))
+            HorizontalDivider(
+                Modifier
+                    .padding(horizontal = 40.dp)
+                    .background(color = MaterialTheme.colorScheme.primary)
             )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Max),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Text(
+                    text = "Order Refill Dates",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 26.sp,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.align(Alignment.CenterVertically)
+                )
+            }
+            HorizontalDivider(
+                Modifier
+                    .padding(horizontal = 40.dp)
+                    .background(color = MaterialTheme.colorScheme.primary)
+            )
+            Spacer(Modifier.size(20.dp))
+            Column(
+                modifier = Modifier
+                    .height(125.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                meds.forEach { item ->
+                    MedicationRefill(meds = item, dateString = item.refill.toString())
+                }
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.plants),
+                    contentDescription = "Plants",
+                    modifier = Modifier
+                        .align(Alignment.Bottom)
+                        .offset(x = (-50).dp)
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                IconButton(onClick = { calendar() }) {
+                    Icon(
+                        Icons.Filled.DateRange,
+                        "Calendar",
+                        modifier = Modifier
+                            .height(100.dp)
+                            .width(100.dp),
+                        tint = MaterialTheme.colorScheme.secondary
+                    )
+                }
+                Spacer(modifier = Modifier.weight(1f))
+                Image(
+                    painter = painterResource(id = R.drawable.plants),
+                    contentDescription = "Plants",
+                    modifier = Modifier
+                        .align(Alignment.Bottom)
+                        .graphicsLayer { rotationY = 180f }
+                        .offset(x = (-50).dp)
+                )
+            }
         }
     }
 }
