@@ -9,7 +9,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -29,8 +28,8 @@ import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -46,6 +45,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -58,7 +58,12 @@ import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun LandingScreen(settings: () -> Unit, calendar: () -> Unit, addMeds: () ->Unit, medication: () -> Unit) {
+fun LandingScreen(
+    settings: () -> Unit,
+    calendar: () -> Unit,
+    addMeds: () -> Unit,
+    medication: () -> Unit
+) {
 
     val username = "Snippy"
 
@@ -73,7 +78,8 @@ fun LandingScreen(settings: () -> Unit, calendar: () -> Unit, addMeds: () ->Unit
                     color = MaterialTheme.colorScheme.surfaceVariant,
                     shape = RoundedCornerShape(10.dp)
                 ),
-            horizontalArrangement = Arrangement.Center
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
                 painter = painterResource(id = R.drawable.plants),
@@ -83,21 +89,15 @@ fun LandingScreen(settings: () -> Unit, calendar: () -> Unit, addMeds: () ->Unit
                     .offset(x = (-19).dp)
                     .graphicsLayer { rotationZ = 90f }
             )
-            Box(
+            Text(
+                text = "Welcome, $username!",
+                fontSize = 24.sp,
+                overflow = TextOverflow.Clip,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onSecondaryContainer,
                 modifier = Modifier
-                    .height(100.dp)
-            ) {
-                Text(
-                    text = "Welcome, $username!",
-                    fontSize = 24.sp,
-                    overflow = TextOverflow.Clip,
-                    textAlign = TextAlign.Center,
-                    color = MaterialTheme.colorScheme.onSecondaryContainer,
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .width(170.dp)
-                )
-            }
+                    .weight(1f)
+            )
             Image(
                 painter = painterResource(id = R.drawable.plants),
                 contentDescription = "plant leaves",
@@ -155,7 +155,7 @@ fun LandingScreen(settings: () -> Unit, calendar: () -> Unit, addMeds: () ->Unit
                 .height(125.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            meds.forEach{ item ->
+            meds.forEach { item ->
                 MedicationRow(meds = item) {
                     medication()
                 }
@@ -163,7 +163,7 @@ fun LandingScreen(settings: () -> Unit, calendar: () -> Unit, addMeds: () ->Unit
 
         }
         Spacer(Modifier.size(16.dp))
-        Divider(
+        HorizontalDivider(
             Modifier
                 .padding(horizontal = 40.dp)
                 .background(color = MaterialTheme.colorScheme.primary)
@@ -182,7 +182,7 @@ fun LandingScreen(settings: () -> Unit, calendar: () -> Unit, addMeds: () ->Unit
                 modifier = Modifier.align(Alignment.CenterVertically)
             )
         }
-        Divider(
+        HorizontalDivider(
             Modifier
                 .padding(horizontal = 40.dp)
                 .background(color = MaterialTheme.colorScheme.primary)
@@ -193,7 +193,7 @@ fun LandingScreen(settings: () -> Unit, calendar: () -> Unit, addMeds: () ->Unit
                 .height(125.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            meds.forEach{item ->
+            meds.forEach { item ->
                 MedicationRefill(meds = item, dateString = item.refill.toString())
             }
         }
@@ -256,11 +256,11 @@ fun MedicationRefill(meds: Meds, dateString: String) {
                 color = MaterialTheme.colorScheme.onSecondaryContainer,
                 modifier = Modifier.weight(0.3f)
             )
-            Divider(
-                color = MaterialTheme.colorScheme.onSecondaryContainer,
+            HorizontalDivider(
                 modifier = Modifier
                     .height(21.dp)
-                    .width(2.dp)
+                    .width(2.dp),
+                color = MaterialTheme.colorScheme.onSecondaryContainer
             )
             Text(
                 text = formattedDate, fontWeight = FontWeight.SemiBold,
@@ -286,16 +286,16 @@ fun MedicationRow(meds: Meds, medication: () -> Unit) {
                 .fillMaxWidth(), horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = meds.id.toString() ,
+                text = meds.id.toString(),
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.secondary,
                 modifier = Modifier.weight(0.3f)
             )
-            Divider(
-                color = MaterialTheme.colorScheme.secondary,
+            HorizontalDivider(
                 modifier = Modifier
                     .height(21.dp)
-                    .width(2.dp)
+                    .width(2.dp),
+                color = MaterialTheme.colorScheme.secondary
             )
             Text(
                 text = meds.name,
@@ -308,11 +308,11 @@ fun MedicationRow(meds: Meds, medication: () -> Unit) {
                 ),
                 modifier = Modifier.weight(1f)
             )
-            Divider(
-                color = MaterialTheme.colorScheme.secondary,
+            HorizontalDivider(
                 modifier = Modifier
                     .height(21.dp)
-                    .width(2.dp)
+                    .width(2.dp),
+                color = MaterialTheme.colorScheme.secondary
             )
             Text(
                 text = "${meds.dose} mg",
@@ -357,7 +357,9 @@ fun LandingBar(settings: () -> Unit) {
 
 
 @RequiresApi(Build.VERSION_CODES.O)
-@Preview(showSystemUi = true)
+@Preview(showSystemUi = true, device = Devices.NEXUS_5)
+@Preview(showSystemUi = true, device = Devices.PIXEL_6)
+@Preview(showSystemUi = true, device = Devices.PIXEL_C)
 @Composable
 fun LandingPreview() {
     MediMateTheme {
