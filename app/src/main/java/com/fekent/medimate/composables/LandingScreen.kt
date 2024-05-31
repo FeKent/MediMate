@@ -211,17 +211,18 @@ fun LandingScreen(
                     .align(Alignment.Bottom)
                     .offset(x = (-50).dp)
             )
+            Spacer(modifier = Modifier.weight(1f))
             IconButton(onClick = { calendar() }) {
                 Icon(
                     Icons.Filled.DateRange,
                     "Calendar",
                     modifier = Modifier
                         .height(100.dp)
-                        .width(100.dp)
-                        .weight(1f),
+                        .width(100.dp),
                     tint = MaterialTheme.colorScheme.secondary
                 )
             }
+            Spacer(modifier = Modifier.weight(1f))
             Image(
                 painter = painterResource(id = R.drawable.plants),
                 contentDescription = "Plants",
