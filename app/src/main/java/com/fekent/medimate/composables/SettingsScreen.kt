@@ -34,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -55,6 +56,7 @@ fun SettingsScreen(back: () -> Unit, appViewModel: AppViewModel = viewModel(fact
     var themeChecked by remember { mutableStateOf(false) }
     var notifChecked by remember { mutableStateOf(false) }
     var username by remember { mutableStateOf("") }
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     Column(modifier = Modifier.fillMaxSize()) {
         SettingsBar { back() }
@@ -90,6 +92,7 @@ fun SettingsScreen(back: () -> Unit, appViewModel: AppViewModel = viewModel(fact
                     ),
                     keyboardActions = KeyboardActions(onDone = {
                         appViewModel.saveUserName(username)
+                        keyboardController?.hide()
                     })
                 )
             }
