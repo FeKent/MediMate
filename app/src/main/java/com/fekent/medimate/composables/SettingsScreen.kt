@@ -47,6 +47,7 @@ import com.fekent.medimate.ui.theme.MediMateTheme
 fun SettingsScreen(back: () -> Unit) {
     var themeChecked by remember { mutableStateOf(false) }
     var notifChecked by remember { mutableStateOf(false) }
+    var username by remember { mutableStateOf("") }
 
     Column(modifier = Modifier.fillMaxSize()) {
         SettingsBar { back() }
@@ -68,8 +69,8 @@ fun SettingsScreen(back: () -> Unit) {
                 )
                 Spacer(Modifier.size(8.dp))
                 TextField(
-                    value = "Snippy",
-                    onValueChange = {},
+                    value = username,
+                    onValueChange = { username = it},
                     textStyle = TextStyle(
                         color = MaterialTheme.colorScheme.primary,
                         fontSize = 20.sp,
