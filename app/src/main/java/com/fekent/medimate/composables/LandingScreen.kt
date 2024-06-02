@@ -35,6 +35,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -49,10 +51,12 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fekent.medimate.R
 import com.fekent.medimate.data.Meds
 import com.fekent.medimate.data.meds
 import com.fekent.medimate.ui.theme.MediMateTheme
+import com.fekent.medimate.ui.viewModels.AppViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -62,10 +66,11 @@ fun LandingScreen(
     settings: () -> Unit,
     calendar: () -> Unit,
     addMeds: () -> Unit,
-    medication: () -> Unit
+    medication: () -> Unit,
+    appViewModel: AppViewModel = viewModel(factory = AppViewModel.Factory)
 ) {
 
-    val username = "Snippy"
+    val savedUserName by appViewModel.uiState.collectAsState()
 
     Column(Modifier.fillMaxWidth()) {
         LandingBar { settings() }
@@ -91,7 +96,7 @@ fun LandingScreen(
                         .graphicsLayer { rotationZ = 90f }
                 )
                 Text(
-                    text = "Welcome, $username!",
+                    text = "Welcome, ${savedUserName.userName}!",
                     fontSize = 24.sp,
                     overflow = TextOverflow.Clip,
                     textAlign = TextAlign.Center,

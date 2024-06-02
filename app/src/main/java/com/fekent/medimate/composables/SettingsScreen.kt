@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -35,16 +37,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fekent.medimate.R
 import com.fekent.medimate.ui.theme.MediMateTheme
+import com.fekent.medimate.ui.viewModels.AppViewModel
 
 
 @Composable
-fun SettingsScreen(back: () -> Unit) {
+fun SettingsScreen(back: () -> Unit, appViewModel: AppViewModel = viewModel(factory = AppViewModel.Factory)) {
     var themeChecked by remember { mutableStateOf(false) }
     var notifChecked by remember { mutableStateOf(false) }
     var username by remember { mutableStateOf("") }
@@ -75,7 +82,15 @@ fun SettingsScreen(back: () -> Unit) {
                         color = MaterialTheme.colorScheme.primary,
                         fontSize = 20.sp,
                         textAlign = TextAlign.Center
-                    )
+                    ),
+                    keyboardOptions = KeyboardOptions(
+                        capitalization = KeyboardCapitalization.Words,
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(onDone = {
+                        appViewModel.saveUserName(username)
+                    })
                 )
             }
             Spacer(Modifier.size(16.dp))
@@ -197,6 +212,6 @@ fun SettingsBar(back: () -> Unit) {
 @Composable
 fun SettingPreview() {
     MediMateTheme {
-        SettingsScreen {}
+        SettingsScreen({})
     }
 }
