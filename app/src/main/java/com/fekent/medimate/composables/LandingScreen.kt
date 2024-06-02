@@ -73,8 +73,8 @@ fun LandingScreen(
     val savedUserName by appViewModel.uiState.collectAsState()
 
     Column(Modifier.fillMaxWidth()) {
-        LandingBar { settings() }
-        Column(Modifier.verticalScroll(rememberScrollState())) {
+        LandingBar(settings, calendar)
+        Column(Modifier.fillMaxHeight().verticalScroll(rememberScrollState())) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -208,7 +208,8 @@ fun LandingScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(),
+                    .fillMaxHeight()
+                    .weight(1f),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -219,17 +220,6 @@ fun LandingScreen(
                         .align(Alignment.Bottom)
                         .offset(x = (-50).dp)
                 )
-                Spacer(modifier = Modifier.weight(1f))
-                IconButton(onClick = { calendar() }) {
-                    Icon(
-                        Icons.Filled.DateRange,
-                        "Calendar",
-                        modifier = Modifier
-                            .height(100.dp)
-                            .width(100.dp),
-                        tint = MaterialTheme.colorScheme.secondary
-                    )
-                }
                 Spacer(modifier = Modifier.weight(1f))
                 Image(
                     painter = painterResource(id = R.drawable.plants),
@@ -337,7 +327,7 @@ fun MedicationRow(meds: Meds, medication: () -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LandingBar(settings: () -> Unit) {
+fun LandingBar(settings: () -> Unit, calendar: () -> Unit) {
     CenterAlignedTopAppBar(
         title = {
             Text(
@@ -348,6 +338,18 @@ fun LandingBar(settings: () -> Unit) {
                 overflow = TextOverflow.Ellipsis,
                 color = MaterialTheme.colorScheme.primary
             )
+        },
+        navigationIcon = {
+            IconButton(onClick = { calendar() }) {
+                Icon(
+                    Icons.Filled.DateRange,
+                    "Calendar",
+                    modifier = Modifier
+                        .height(100.dp)
+                        .width(100.dp),
+                    tint = MaterialTheme.colorScheme.secondary
+                )
+            }
         },
         actions = {
             IconButton(onClick = { settings() }) {
