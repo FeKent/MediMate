@@ -34,6 +34,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -75,7 +76,10 @@ fun LandingScreen(
 
     Column(Modifier.fillMaxWidth()) {
         LandingBar(settings, calendar)
-        Column(Modifier.fillMaxHeight().verticalScroll(rememberScrollState())) {
+        Column(
+            Modifier
+                .fillMaxHeight()
+                .verticalScroll(rememberScrollState())) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -257,7 +261,7 @@ fun MedicationRefill(meds: Meds, dateString: String) {
                 color = MaterialTheme.colorScheme.onSecondaryContainer,
                 modifier = Modifier.weight(0.3f)
             )
-            HorizontalDivider(
+            VerticalDivider(
                 modifier = Modifier
                     .height(21.dp)
                     .width(2.dp),
@@ -292,7 +296,7 @@ fun MedicationRow(meds: Meds, medication: () -> Unit) {
                 color = MaterialTheme.colorScheme.secondary,
                 modifier = Modifier.weight(0.3f)
             )
-            HorizontalDivider(
+            VerticalDivider(
                 modifier = Modifier
                     .height(21.dp)
                     .width(2.dp),
@@ -309,7 +313,7 @@ fun MedicationRow(meds: Meds, medication: () -> Unit) {
                 ),
                 modifier = Modifier.weight(1f)
             )
-            HorizontalDivider(
+            VerticalDivider(
                 modifier = Modifier
                     .height(21.dp)
                     .width(2.dp),
