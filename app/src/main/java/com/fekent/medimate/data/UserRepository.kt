@@ -14,7 +14,7 @@ class UserRepository(private val dataStore: DataStore<Preferences>){
 
     val currentUserName: Flow<String> =
         dataStore.data.map { preferences ->
-            preferences[USER_NAME] ?: "Unknown"
+            preferences[USER_NAME] ?: "User"
         }
 
     suspend fun saveUserName(userName: String){
