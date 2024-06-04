@@ -36,7 +36,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -51,7 +50,6 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fekent.medimate.R
 import com.fekent.medimate.data.Meds
 import com.fekent.medimate.data.meds
@@ -67,10 +65,13 @@ fun LandingScreen(
     calendar: () -> Unit,
     addMeds: () -> Unit,
     medication: () -> Unit,
-    appViewModel: AppViewModel = viewModel(factory = AppViewModel.Factory)
+   // appViewModel: AppViewModel = viewModel(factory = AppViewModel.Factory),
+    previewViewModel: AppViewModel? = null, // Nullable ViewModel parameter
+    previewUserName: String? = null // Nullable username parameter for preview
 ) {
+    val savedUserName = previewViewModel?.uiState?.collectAsState()?.value?.userName ?: previewUserName ?: ""
 
-    val savedUserName by appViewModel.uiState.collectAsState()
+  //  val savedUserName by appViewModel.uiState.collectAsState().value.userName
 
     Column(Modifier.fillMaxWidth()) {
         LandingBar(settings, calendar)
@@ -96,7 +97,7 @@ fun LandingScreen(
                         .graphicsLayer { rotationZ = 90f }
                 )
                 Text(
-                    text = "Welcome, ${savedUserName.userName}!",
+                    text = "Welcome, ${savedUserName}!",
                     fontSize = 24.sp,
                     overflow = TextOverflow.Clip,
                     textAlign = TextAlign.Center,
@@ -375,6 +376,6 @@ fun LandingBar(settings: () -> Unit, calendar: () -> Unit) {
 @Composable
 fun LandingPreview() {
     MediMateTheme {
-        LandingScreen({}, {}, {}, {})
+        LandingScreen({}, {}, {}, {}, null, "Jeffery")
     }
 }
