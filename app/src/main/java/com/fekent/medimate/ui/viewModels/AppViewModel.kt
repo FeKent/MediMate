@@ -25,7 +25,7 @@ class AppViewModel(private val userRepository: UserRepository): ViewModel(){
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = UiState("User")
+            initialValue = UiState("Unknown")
         )
 
     fun saveUserName(userName: String){
