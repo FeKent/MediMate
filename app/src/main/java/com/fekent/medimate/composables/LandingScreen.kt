@@ -70,7 +70,6 @@ fun LandingScreen(
    // previewUserName: String? = null // Nullable username parameter for preview
 ) {
     //val savedUserName = previewViewModel?.uiState?.collectAsState()?.value?.userName ?: previewUserName ?: ""
-
   val savedUserName by appViewModel.uiState.collectAsState()
 
     Column(Modifier.fillMaxWidth()) {

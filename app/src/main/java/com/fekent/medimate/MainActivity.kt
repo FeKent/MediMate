@@ -63,10 +63,10 @@ fun MediMate(navController: NavHostController) {
             )
         }
         composable(Screen.Settings.route) {
-            SettingsScreen(back = { navController.navigate(Screen.Landing.route) })
+            SettingsScreen(back = {navController.popBackStack(Screen.Landing.route, inclusive = false)})
         }
-        composable(Screen.AddMeds.route) { AddMedsScreen(back = {navController.popBackStack(Screen.Landing.route, inclusive = true)})}
-        composable(Screen.Calendar.route) { CalendarScreen(back = { navController.popBackStack(Screen.Landing.route, inclusive = true) }) }
-        composable(Screen.Medication.route) { MedicationScreen(back = {navController.popBackStack(Screen.Landing.route, inclusive = true)})}
+        composable(Screen.AddMeds.route) { AddMedsScreen(back = {navController.popBackStack(Screen.Landing.route, inclusive = false)})}
+        composable(Screen.Calendar.route) { CalendarScreen(back = {navController.popBackStack(Screen.Landing.route, inclusive = false)})}
+        composable(Screen.Medication.route) { MedicationScreen(back = {navController.popBackStack(Screen.Landing.route, inclusive = false)})}
     }
 }
