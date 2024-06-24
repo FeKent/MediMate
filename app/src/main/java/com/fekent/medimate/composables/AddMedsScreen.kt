@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -46,7 +47,7 @@ fun AddMedsScreen(back: () -> Unit) {
     Column(modifier = Modifier.fillMaxSize()) {
         AddMedsBar{ back() }
         Spacer(Modifier.size(24.dp))
-        Column(Modifier.align(Alignment.CenterHorizontally)) {
+        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             TextField(value = name, onValueChange = {name = it}, label = { Text(text = "Medication Name")})
             Spacer(Modifier.size(8.dp))
             TextField(value = dose, onValueChange = {dose = it}, label = { Text(text = "Dosage")})
@@ -61,6 +62,7 @@ fun AddMedsScreen(back: () -> Unit) {
 
                 Row {
                     Text(text = "Refill Date:")
+                    Spacer(Modifier.size(4.dp))
                     Text(text = formattedDate.toString())
                 }
             }
