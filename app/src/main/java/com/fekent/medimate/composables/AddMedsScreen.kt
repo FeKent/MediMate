@@ -23,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -45,21 +46,25 @@ fun AddMedsScreen(back: () -> Unit) {
     Column(modifier = Modifier.fillMaxSize()) {
         AddMedsBar{ back() }
         Spacer(Modifier.size(24.dp))
-        TextField(value = name, onValueChange = {name = it})
-        TextField(value = dose, onValueChange = {dose = it})
-        TextField(value = pillCount, onValueChange = {pillCount = it})
+        Column(Modifier.align(Alignment.CenterHorizontally)) {
+            TextField(value = name, onValueChange = {name = it}, label = { Text(text = "Medication Name")})
+            Spacer(Modifier.size(8.dp))
+            TextField(value = dose, onValueChange = {dose = it}, label = { Text(text = "Dosage")})
+            Spacer(Modifier.size(8.dp))
+            TextField(value = pillCount, onValueChange = {pillCount = it}, label = { Text(text = "Total Pill Count")})
+            Spacer(Modifier.size(8.dp))
 
-        if (pillCount.isNotEmpty()) {
-            val dateEntered = remember { LocalDate.now() }
-            val refillDate = dateEntered.plusDays(pillCount.toLongOrNull() ?: 0)
-            val formattedDate = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(refillDate)
+            if (pillCount.isNotEmpty()) {
+                val dateEntered = remember { LocalDate.now() }
+                val refillDate = dateEntered.plusDays(pillCount.toLongOrNull() ?: 0)
+                val formattedDate = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(refillDate)
 
-            Row {
-                Text(text = "Refill Date:")
-                Text(text = formattedDate.toString())
+                Row {
+                    Text(text = "Refill Date:")
+                    Text(text = formattedDate.toString())
+                }
             }
         }
-
     }
 }
 
