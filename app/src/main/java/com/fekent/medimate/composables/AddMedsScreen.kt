@@ -1,5 +1,7 @@
 package com.fekent.medimate.composables
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -8,7 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -33,13 +35,12 @@ import com.fekent.medimate.ui.theme.MediMateTheme
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AddMedsScreen(back: () -> Unit) {
     var name by remember { mutableStateOf("") }
     var dose by remember { mutableStateOf("") }
     var pillCount by remember { mutableStateOf("") }
-    var refill by remember { mutableStateOf("") }
-
 
     Column(modifier = Modifier.fillMaxSize()) {
         AddMedsBar{ back() }
@@ -48,9 +49,16 @@ fun AddMedsScreen(back: () -> Unit) {
         TextField(value = dose, onValueChange = {dose = it})
         TextField(value = pillCount, onValueChange = {pillCount = it})
 
+        if (pillCount.isNotEmpty()) {
+            val dateEntered = remember { LocalDate.now() }
+            val refillDate = dateEntered.plusDays(pillCount.toLongOrNull() ?: 0)
+            val formattedDate = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(refillDate)
 
-
-
+            Row {
+                Text(text = "Refill Date:")
+                Text(text = formattedDate.toString())
+            }
+        }
 
     }
 }
@@ -70,7 +78,7 @@ fun AddMedsBar(back: () -> Unit) {
     }, navigationIcon = {
         IconButton(onClick = { back() }) {
             Icon(
-                Icons.Filled.KeyboardArrowLeft,
+                Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                 "Back",
                 tint = MaterialTheme.colorScheme.secondary,
                 modifier = Modifier.size(60.dp)
@@ -83,6 +91,7 @@ fun AddMedsBar(back: () -> Unit) {
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showSystemUi = true)
 @Composable
 fun AddMedsPreview() {
