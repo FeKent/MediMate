@@ -45,15 +45,24 @@ fun AddMedsScreen(back: () -> Unit) {
     var pillCount by remember { mutableStateOf("") }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        AddMedsBar{ back() }
+        AddMedsBar { back() }
         Spacer(Modifier.size(24.dp))
         Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            TextField(value = name, onValueChange = {name = it}, label = { Text(text = "Medication Name")})
+            TextField(
+                value = name,
+                onValueChange = { name = it },
+                label = { Text(text = "Medication Name") })
             Spacer(Modifier.size(8.dp))
-            TextField(value = dose, onValueChange = {dose = it}, label = { Text(text = "Dosage")})
+            TextField(
+                value = dose,
+                onValueChange = { dose = it },
+                label = { Text(text = "Dosage") })
             Spacer(Modifier.size(8.dp))
-            TextField(value = pillCount, onValueChange = {pillCount = it}, label = { Text(text = "Total Pill Count")})
-            Spacer(Modifier.size(8.dp))
+            TextField(
+                value = pillCount,
+                onValueChange = { pillCount = it },
+                label = { Text(text = "Total Pill Count") })
+            Spacer(Modifier.size(16.dp))
 
             if (pillCount.isNotEmpty()) {
                 val dateEntered = remember { LocalDate.now() }
@@ -61,9 +70,17 @@ fun AddMedsScreen(back: () -> Unit) {
                 val formattedDate = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(refillDate)
 
                 Row {
-                    Text(text = "Refill Date:")
+                    Text(
+                        text = "Refill Date:",
+                        fontSize = 16.sp,
+                        modifier = Modifier.align(Alignment.CenterVertically)
+                    )
                     Spacer(Modifier.size(4.dp))
-                    Text(text = formattedDate.toString())
+                    Text(
+                        text = formattedDate.toString(),
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
                 }
             }
         }
