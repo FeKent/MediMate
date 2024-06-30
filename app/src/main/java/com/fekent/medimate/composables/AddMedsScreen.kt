@@ -15,6 +15,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -49,6 +51,7 @@ fun AddMedsScreen(back: () -> Unit) {
     var dose by remember { mutableStateOf("") }
     var pillCount by remember { mutableStateOf("") }
     var isDoneActionTriggered by remember { mutableStateOf(false) }
+    var checked by remember { mutableStateOf(false) }
     val keyboardManager = LocalFocusManager.current
 
 
@@ -67,40 +70,65 @@ fun AddMedsScreen(back: () -> Unit) {
                 value = dose,
                 onValueChange = { dose = it },
                 label = { Text(text = "Dosage") },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next, keyboardType = KeyboardType.Number)
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next,
+                    keyboardType = KeyboardType.Number
+                )
             )
             Spacer(Modifier.size(8.dp))
             TextField(
                 value = pillCount,
-                onValueChange = { pillCount = it ; isDoneActionTriggered = false },
+                onValueChange = { pillCount = it; isDoneActionTriggered = false },
                 label = { Text(text = "Total Pill Count") },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Number),
-                keyboardActions = KeyboardActions(onDone = { isDoneActionTriggered = true ; keyboardManager.clearFocus()})
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Number
+                ),
+                keyboardActions = KeyboardActions(onDone = {
+                    isDoneActionTriggered = true; keyboardManager.clearFocus()
+                })
             )
             Spacer(Modifier.size(16.dp))
+            if (pillCount.isNotEmpty() && isDoneActionTriggered) {
+                val dateEntered = remember { LocalDate.now() }
+                val refillDate = dateEntered.plusDays(pillCount.toLongOrNull() ?: 0)
+                val formattedDate = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(refillDate)
 
-                if (pillCount.isNotEmpty() && isDoneActionTriggered) {
-                    val dateEntered = remember { LocalDate.now() }
-                    val refillDate = dateEntered.plusDays(pillCount.toLongOrNull() ?: 0)
-                    val formattedDate = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(refillDate)
-
-                    Row {
-                        Text(
-                            text = "Refill Date:",
-                            fontSize = 16.sp,
-                            modifier = Modifier.align(Alignment.CenterVertically)
-                        )
-                        Spacer(Modifier.size(4.dp))
-                        Text(
-                            text = formattedDate.toString(),
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    }
+                Row {
+                    Text(
+                        text = "Refill Date:",
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.align(Alignment.CenterVertically)
+                    )
+                    Spacer(Modifier.size(4.dp))
+                    Text(
+                        text = formattedDate.toString(),
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+                Spacer(Modifier.size(16.dp))
+                Row {
+                    Text(
+                        text = "Add Refill Reminder?",
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.align(Alignment.CenterVertically)
+                    )
+                    Checkbox(
+                        checked = checked,
+                        onCheckedChange = { checked = it },
+                        colors = CheckboxDefaults.colors(uncheckedColor = MaterialTheme.colorScheme.primary)
+                    )
                 }
             }
+
         }
     }
+}
 
 
 @OptIn(ExperimentalMaterial3Api::class)
