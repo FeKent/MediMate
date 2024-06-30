@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -28,7 +30,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -43,6 +48,9 @@ fun AddMedsScreen(back: () -> Unit) {
     var name by remember { mutableStateOf("") }
     var dose by remember { mutableStateOf("") }
     var pillCount by remember { mutableStateOf("") }
+    var isDoneActionTriggered by remember { mutableStateOf(false) }
+    val keyboardManager = LocalFocusManager.current
+
 
     Column(modifier = Modifier.fillMaxSize()) {
         AddMedsBar { back() }
@@ -51,41 +59,49 @@ fun AddMedsScreen(back: () -> Unit) {
             TextField(
                 value = name,
                 onValueChange = { name = it },
-                label = { Text(text = "Medication Name") })
+                label = { Text(text = "Medication Name") },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
+            )
             Spacer(Modifier.size(8.dp))
             TextField(
                 value = dose,
                 onValueChange = { dose = it },
-                label = { Text(text = "Dosage") })
+                label = { Text(text = "Dosage") },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next, keyboardType = KeyboardType.Number)
+            )
             Spacer(Modifier.size(8.dp))
             TextField(
                 value = pillCount,
-                onValueChange = { pillCount = it },
-                label = { Text(text = "Total Pill Count") })
+                onValueChange = { pillCount = it ; isDoneActionTriggered = false },
+                label = { Text(text = "Total Pill Count") },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Number),
+                keyboardActions = KeyboardActions(onDone = { isDoneActionTriggered = true ; keyboardManager.clearFocus()})
+            )
             Spacer(Modifier.size(16.dp))
 
-            if (pillCount.isNotEmpty()) {
-                val dateEntered = remember { LocalDate.now() }
-                val refillDate = dateEntered.plusDays(pillCount.toLongOrNull() ?: 0)
-                val formattedDate = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(refillDate)
+                if (pillCount.isNotEmpty() && isDoneActionTriggered) {
+                    val dateEntered = remember { LocalDate.now() }
+                    val refillDate = dateEntered.plusDays(pillCount.toLongOrNull() ?: 0)
+                    val formattedDate = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(refillDate)
 
-                Row {
-                    Text(
-                        text = "Refill Date:",
-                        fontSize = 16.sp,
-                        modifier = Modifier.align(Alignment.CenterVertically)
-                    )
-                    Spacer(Modifier.size(4.dp))
-                    Text(
-                        text = formattedDate.toString(),
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
+                    Row {
+                        Text(
+                            text = "Refill Date:",
+                            fontSize = 16.sp,
+                            modifier = Modifier.align(Alignment.CenterVertically)
+                        )
+                        Spacer(Modifier.size(4.dp))
+                        Text(
+                            text = formattedDate.toString(),
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
                 }
             }
         }
     }
-}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -110,7 +126,11 @@ fun AddMedsBar(back: () -> Unit) {
         }
     }, modifier = Modifier
         .padding(4.dp)
-        .shadow(elevation = 5.dp, spotColor = Color.DarkGray, shape = RoundedCornerShape(10.dp))
+        .shadow(
+            elevation = 5.dp,
+            spotColor = Color.DarkGray,
+            shape = RoundedCornerShape(10.dp)
+        )
     )
 }
 
