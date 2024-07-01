@@ -48,12 +48,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fekent.medimate.R
 import com.fekent.medimate.data.Meds
 import com.fekent.medimate.data.meds
+import com.fekent.medimate.ui.theme.MediMateTheme
 import com.fekent.medimate.ui.viewModels.AppViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -65,19 +68,34 @@ fun LandingScreen(
     calendar: () -> Unit,
     addMeds: () -> Unit,
     medication: () -> Unit,
-    appViewModel: AppViewModel = viewModel(factory = AppViewModel.Factory),
-   // previewViewModel: AppViewModel? = null, // Nullable ViewModel parameter
-   // previewUserName: String? = null // Nullable username parameter for preview
+    viewModel: AppViewModel = viewModel(factory = AppViewModel.Factory)
 ) {
-    //val savedUserName = previewViewModel?.uiState?.collectAsState()?.value?.userName ?: previewUserName ?: ""
-  val savedUserName by appViewModel.uiState.collectAsState()
+    val viewState by viewModel.uiState.collectAsState()
+    LandingScreenUi(
+        settings = { settings()},
+        calendar = { calendar() },
+        addMeds = { addMeds()},
+        medication = { medication() },
+        username = viewState.userName)
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+private fun LandingScreenUi(
+    settings: () -> Unit,
+    calendar: () -> Unit,
+    addMeds: () -> Unit,
+    medication: () -> Unit,
+    username: String
+) {
 
     Column(Modifier.fillMaxWidth()) {
         LandingBar(settings, calendar)
         Column(
             Modifier
                 .fillMaxHeight()
-                .verticalScroll(rememberScrollState())) {
+                .verticalScroll(rememberScrollState())
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -99,7 +117,7 @@ fun LandingScreen(
                         .graphicsLayer { rotationZ = 90f }
                 )
                 Text(
-                    text = "Welcome, ${savedUserName.userName}!",
+                    text = "Welcome, $username!",
                     fontSize = 24.sp,
                     overflow = TextOverflow.Clip,
                     textAlign = TextAlign.Center,
@@ -371,13 +389,13 @@ fun LandingBar(settings: () -> Unit, calendar: () -> Unit) {
 }
 
 
-//@RequiresApi(Build.VERSION_CODES.O)
-//@Preview(showSystemUi = true, device = Devices.NEXUS_5)
-//@Preview(showSystemUi = true, device = Devices.PIXEL_6)
-//@Preview(showSystemUi = true, device = Devices.PIXEL_C)
-//@Composable
-//fun LandingPreview() {
-//    MediMateTheme {
-//        LandingScreen({}, {}, {}, {}, null, "Jeffery")
-//    }
-//}
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview(showSystemUi = true, device = Devices.NEXUS_5)
+@Preview(showSystemUi = true, device = Devices.PIXEL_6)
+@Preview(showSystemUi = true, device = Devices.PIXEL_C)
+@Composable
+fun LandingPreview() {
+    MediMateTheme {
+        LandingScreenUi({}, {}, {}, {}, "Emily")
+    }
+}
