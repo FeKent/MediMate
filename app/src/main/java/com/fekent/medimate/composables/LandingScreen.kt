@@ -68,7 +68,8 @@ fun LandingScreen(
     calendar: () -> Unit,
     addMeds: () -> Unit,
     medication: () -> Unit,
-    viewModel: AppViewModel = viewModel(factory = AppViewModel.Factory)
+    viewModel: AppViewModel = viewModel(factory = AppViewModel.Factory),
+    meds: List<Meds>
 ) {
     val viewState by viewModel.uiState.collectAsState()
     LandingScreenUi(
@@ -76,7 +77,8 @@ fun LandingScreen(
         calendar = { calendar() },
         addMeds = { addMeds()},
         medication = { medication() },
-        username = viewState.userName)
+        username = viewState.userName,
+        meds = meds)
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -86,7 +88,8 @@ private fun LandingScreenUi(
     calendar: () -> Unit,
     addMeds: () -> Unit,
     medication: () -> Unit,
-    username: String
+    username: String,
+    meds: List<Meds>
 ) {
 
     Column(Modifier.fillMaxWidth()) {
@@ -396,6 +399,6 @@ fun LandingBar(settings: () -> Unit, calendar: () -> Unit) {
 @Composable
 fun LandingPreview() {
     MediMateTheme {
-        LandingScreenUi({}, {}, {}, {}, "Emily")
+        LandingScreenUi({}, {}, {}, {}, "Emily", meds)
     }
 }

@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -67,11 +69,14 @@ fun MediMate(navController: NavHostController) {
 
     NavHost(navController = navController, startDestination = Screen.Landing.route) {
         composable(Screen.Landing.route) {
+            val meds by database.medsDao().allMeds().collectAsState(initial = emptyList())
+
             LandingScreen(
                 settings = { navController.navigate(Screen.Settings.route) },
                 calendar = { navController.navigate(Screen.Calendar.route) },
                 addMeds = { navController.navigate(Screen.AddMeds.route) },
                 medication = { navController.navigate(Screen.Medication.route) },
+                meds = meds
             )
         }
         composable(Screen.Settings.route) {
