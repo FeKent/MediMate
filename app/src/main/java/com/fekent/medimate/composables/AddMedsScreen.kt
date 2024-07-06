@@ -14,6 +14,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
@@ -40,13 +41,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.fekent.medimate.data.Meds
 import com.fekent.medimate.ui.theme.MediMateTheme
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun AddMedsScreen(back: () -> Unit) {
+fun AddMedsScreen(back: () -> Unit, onMedEntered: (Meds) -> Unit) {
     var name by remember { mutableStateOf("") }
     var dose by remember { mutableStateOf("") }
     var pillCount by remember { mutableStateOf("") }
@@ -124,12 +126,29 @@ fun AddMedsScreen(back: () -> Unit) {
                         colors = CheckboxDefaults.colors(uncheckedColor = MaterialTheme.colorScheme.primary)
                     )
                 }
+                Spacer(Modifier.size(32.dp))
+                IconButton(onClick = {
+                    val newMeds = Meds(
+                        name = name,
+                        dose = dose.toInt(),
+                        pillCount = pillCount.toInt(),
+                        refill = refillDate
+                    )
+                    onMedEntered.invoke(newMeds)
+                }) {
+                    Icon(
+                        Icons.Filled.AddCircle,
+                        "Save Button",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(60.dp)
+                    )
+                }
             }
+
 
         }
     }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -168,6 +187,6 @@ fun AddMedsBar(back: () -> Unit) {
 @Composable
 fun AddMedsPreview() {
     MediMateTheme {
-        AddMedsScreen {}
+        AddMedsScreen({}, {})
     }
 }

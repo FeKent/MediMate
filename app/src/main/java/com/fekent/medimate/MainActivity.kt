@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
@@ -27,6 +28,7 @@ import com.fekent.medimate.composables.MedicationScreen
 import com.fekent.medimate.composables.SettingsScreen
 import com.fekent.medimate.data.MedsDatabase
 import com.fekent.medimate.ui.theme.MediMateTheme
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -59,7 +61,7 @@ sealed class Screen(val route: String) {
 @Composable
 fun MediMate(navController: NavHostController) {
     val appContext = LocalContext.current
-    val database = remember{
+    val database = remember {
         Room.databaseBuilder(
             appContext,
             MedsDatabase::class.java,
@@ -80,10 +82,42 @@ fun MediMate(navController: NavHostController) {
             )
         }
         composable(Screen.Settings.route) {
-            SettingsScreen(back = {navController.popBackStack(Screen.Landing.route, inclusive = false)})
+            SettingsScreen(back = {
+                navController.popBackStack(
+                    Screen.Landing.route,
+                    inclusive = false
+                )
+            })
         }
-        composable(Screen.AddMeds.route) { AddMedsScreen(back = {navController.popBackStack(Screen.Landing.route, inclusive = false)})}
-        composable(Screen.Calendar.route) { CalendarScreen(back = {navController.popBackStack(Screen.Landing.route, inclusive = false)})}
-        composable(Screen.Medication.route) { MedicationScreen(back = {navController.popBackStack(Screen.Landing.route, inclusive = false)})}
+        composable(Screen.AddMeds.route) {
+            val addScreenScope = rememberCoroutineScope()
+            AddMedsScreen(back = {
+                navController.popBackStack(
+                    Screen.Landing.route,
+                    inclusive = false
+                )
+            }, onMedEntered = { newMeds ->
+                addScreenScope.launch {
+                    database.medsDao().insertMeds(newMeds)
+                }
+                navController.popBackStack(Screen.Landing.route, inclusive = false)
+            })
+        }
+        composable(Screen.Calendar.route) {
+            CalendarScreen(back = {
+                navController.popBackStack(
+                    Screen.Landing.route,
+                    inclusive = false
+                )
+            })
+        }
+        composable(Screen.Medication.route) {
+            MedicationScreen(back = {
+                navController.popBackStack(
+                    Screen.Landing.route,
+                    inclusive = false
+                )
+            })
+        }
     }
 }
