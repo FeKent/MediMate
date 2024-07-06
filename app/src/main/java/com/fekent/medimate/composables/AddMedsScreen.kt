@@ -98,7 +98,7 @@ fun AddMedsScreen(back: () -> Unit, onMedEntered: (Meds) -> Unit) {
 
                 Row {
                     Text(
-                        text = "Refill Date:",
+                        text = "Meds Used By:",
                         fontSize = 16.sp,
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.align(Alignment.CenterVertically)
