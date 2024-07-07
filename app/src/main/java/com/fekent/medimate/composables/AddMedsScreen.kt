@@ -48,17 +48,18 @@ import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun AddMedsScreen(back: () -> Unit, onMedEntered: (Meds) -> Unit) {
-    var name by remember { mutableStateOf("") }
-    var dose by remember { mutableStateOf("") }
-    var pillCount by remember { mutableStateOf("") }
+fun AddMedsScreen(back: () -> Unit, onMedEntered: (Meds) -> Unit, medToEdit: Meds? = null) {
+    var name by remember { mutableStateOf(medToEdit?.name ?: "") }
+    var dose by remember { mutableStateOf(medToEdit?.dose?.toString() ?: "") }
+    var pillCount by remember { mutableStateOf(medToEdit?.pillCount?.toString() ?: "") }
     var isDoneActionTriggered by remember { mutableStateOf(false) }
     var checked by remember { mutableStateOf(false) }
     val keyboardManager = LocalFocusManager.current
+    val editMode = medToEdit != null
 
 
     Column(modifier = Modifier.fillMaxSize()) {
-        AddMedsBar { back() }
+        AddMedsBar(back = {back()}, title = "${if (editMode) "Edit" else "Add"} Medication")
         Spacer(Modifier.size(24.dp))
         Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             TextField(
@@ -152,10 +153,10 @@ fun AddMedsScreen(back: () -> Unit, onMedEntered: (Meds) -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddMedsBar(back: () -> Unit) {
+fun AddMedsBar(back: () -> Unit, title: String) {
     CenterAlignedTopAppBar(title = {
         Text(
-            text = "Add Meds",
+            text = title,
             fontWeight = FontWeight.SemiBold,
             fontSize = 30.sp,
             maxLines = 1,
