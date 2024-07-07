@@ -85,7 +85,8 @@ fun MediMate(navController: NavHostController) {
                 calendar = { navController.navigate(Screen.Calendar.route) },
                 addMeds = { navController.navigate(Screen.AddMeds.route) },
                 medication = { navController.navigate(Screen.Medication.route) },
-                meds = meds
+                meds = meds,
+                editMed = {med -> navController.navigate("EditMeds/${med.id}")}
             )
         }
         composable(Screen.Settings.route) {
@@ -128,10 +129,11 @@ fun MediMate(navController: NavHostController) {
                             Screen.Landing.route,
                             inclusive = false
                         )
-                    }, onMedEntered = { newMeds ->
+                    }, onMedEntered = { updatedMed ->
                         editScreenScope.launch {
-                            database.medsDao().editMeds(newMeds)
+                            database.medsDao().editMeds(updatedMed)
                         }
+                        navController.popBackStack(Screen.Landing.route, inclusive = false)
                     }, medToEdit = editedMed)
                 }
             }

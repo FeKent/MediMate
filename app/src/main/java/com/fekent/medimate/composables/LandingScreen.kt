@@ -1,12 +1,13 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 
 package com.fekent.medimate.composables
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -70,16 +71,19 @@ fun LandingScreen(
     addMeds: () -> Unit,
     medication: () -> Unit,
     viewModel: AppViewModel = viewModel(factory = AppViewModel.Factory),
-    meds: List<Meds>
+    meds: List<Meds>,
+    editMed: (Meds) -> Unit
 ) {
     val viewState by viewModel.uiState.collectAsState()
     LandingScreenUi(
-        settings = { settings()},
+        settings = { settings() },
         calendar = { calendar() },
-        addMeds = { addMeds()},
+        addMeds = { addMeds() },
         medication = { medication() },
         username = viewState.userName,
-        meds = meds)
+        meds = meds,
+        editMed = editMed
+    )
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -90,7 +94,8 @@ private fun LandingScreenUi(
     addMeds: () -> Unit,
     medication: () -> Unit,
     username: String,
-    meds: List<Meds>
+    meds: List<Meds>,
+    editMed: (Meds) -> Unit
 ) {
 
     Column(Modifier.fillMaxWidth()) {
@@ -187,11 +192,12 @@ private fun LandingScreenUi(
                 modifier = Modifier
                     .height(125.dp)
                     .verticalScroll(rememberScrollState())
+
             ) {
                 meds.forEach { item ->
-                    MedicationRow(meds = item) {
-                        medication()
-                    }
+                    MedicationRow(meds = item,
+                        medication = { medication() },
+                        editMed = { editMed(item) })
                 }
 
             }
@@ -266,8 +272,6 @@ fun MedicationRefill(meds: Meds, dateString: String) {
     val refillDate = minusWorkingDays(days = 7, date = date)
     val formattedDate = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(refillDate)
 
-
-
     Column(
         modifier = Modifier
             .padding(horizontal = 30.dp, vertical = 4.dp)
@@ -304,9 +308,9 @@ fun minusWorkingDays(days: Int, date: LocalDate): LocalDate {
     var refillDate = date
     var remainingDays = days
 
-    while (remainingDays > 0){
+    while (remainingDays > 0) {
         refillDate = refillDate.minusDays(1)
-        if(refillDate.dayOfWeek != DayOfWeek.SATURDAY || refillDate.dayOfWeek != DayOfWeek.SUNDAY){
+        if (refillDate.dayOfWeek != DayOfWeek.SATURDAY || refillDate.dayOfWeek != DayOfWeek.SUNDAY) {
             remainingDays--
         }
     }
@@ -314,7 +318,7 @@ fun minusWorkingDays(days: Int, date: LocalDate): LocalDate {
 }
 
 @Composable
-fun MedicationRow(meds: Meds, medication: () -> Unit) {
+fun MedicationRow(meds: Meds, medication: () -> Unit, editMed: (Meds) -> Unit) {
     Column(
         modifier = Modifier
             .padding(horizontal = 30.dp, vertical = 4.dp)
@@ -323,7 +327,7 @@ fun MedicationRow(meds: Meds, medication: () -> Unit) {
         Row(
             modifier = Modifier
                 .padding(10.dp)
-                .clickable { medication() }
+                .combinedClickable(onClick = { medication() }, onDoubleClick = { editMed(meds) })
                 .fillMaxWidth(), horizontalArrangement = Arrangement.Center
         ) {
             Text(
@@ -416,6 +420,6 @@ fun LandingBar(settings: () -> Unit, calendar: () -> Unit) {
 @Composable
 fun LandingPreview() {
     MediMateTheme {
-        LandingScreenUi({}, {}, {}, {}, "Emily", meds)
+        LandingScreenUi({}, {}, {}, {}, "Emily", meds, {})
     }
 }

@@ -130,6 +130,7 @@ fun AddMedsScreen(back: () -> Unit, onMedEntered: (Meds) -> Unit, medToEdit: Med
                 Spacer(Modifier.size(32.dp))
                 IconButton(onClick = {
                     val newMeds = Meds(
+                        id = medToEdit?.id ?: 0,
                         name = name,
                         dose = dose.toInt(),
                         pillCount = pillCount.toInt(),
