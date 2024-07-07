@@ -26,6 +26,7 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,11 +50,16 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fekent.medimate.R
 import com.fekent.medimate.ui.theme.MediMateTheme
 import com.fekent.medimate.ui.viewModels.AppViewModel
-
+import com.fekent.medimate.ui.viewModels.ThemeViewModel
 
 @Composable
-fun SettingsScreen(back: () -> Unit, appViewModel: AppViewModel = viewModel(factory = AppViewModel.Factory)) {
-    var themeChecked by remember { mutableStateOf(false) }
+fun SettingsScreen(
+    back: () -> Unit,
+    appViewModel: AppViewModel = viewModel(factory = AppViewModel.Factory),
+    themeViewModel: ThemeViewModel
+) {
+    val isDarkTheme by themeViewModel.isDarkTheme.collectAsState()
+    var themeChecked by remember { mutableStateOf(isDarkTheme) }
     var notifChecked by remember { mutableStateOf(false) }
     var username by remember { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -79,7 +85,7 @@ fun SettingsScreen(back: () -> Unit, appViewModel: AppViewModel = viewModel(fact
                 Spacer(Modifier.size(8.dp))
                 TextField(
                     value = username,
-                    onValueChange = { username = it},
+                    onValueChange = { username = it },
                     textStyle = TextStyle(
                         color = MaterialTheme.colorScheme.primary,
                         fontSize = 20.sp,
@@ -117,7 +123,10 @@ fun SettingsScreen(back: () -> Unit, appViewModel: AppViewModel = viewModel(fact
                 Spacer(Modifier.size(8.dp))
                 Switch(
                     checked = themeChecked,
-                    onCheckedChange = { themeChecked = it },
+                    onCheckedChange = { isChecked ->
+                        themeChecked = isChecked
+                        themeViewModel.toggleTheme(isChecked)
+                    },
                     thumbContent = {
                         Icon(
                             painter = painterResource(id = R.drawable.pill),
@@ -214,7 +223,7 @@ fun SettingsBar(back: () -> Unit) {
 @Preview(showSystemUi = true)
 @Composable
 fun SettingPreview() {
-    MediMateTheme {
-        SettingsScreen({})
+    MediMateTheme{
+        SettingsScreen({}, themeViewModel = ThemeViewModel() )
     }
 }

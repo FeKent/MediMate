@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -34,20 +35,24 @@ import com.fekent.medimate.composables.SettingsScreen
 import com.fekent.medimate.data.Meds
 import com.fekent.medimate.data.MedsDatabase
 import com.fekent.medimate.ui.theme.MediMateTheme
+import com.fekent.medimate.ui.viewModels.ThemeViewModel
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+    private val themeViewModel: ThemeViewModel by viewModels { ThemeViewModel.Factory() }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MediMateTheme {
+            val isDarkTheme by themeViewModel.isDarkTheme.collectAsState()
+            MediMateTheme(darkTheme = isDarkTheme) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MediMate(navController = rememberNavController())
+                    MediMate(navController = rememberNavController(), themeViewModel = themeViewModel)
                 }
             }
         }
@@ -66,7 +71,7 @@ sealed class Screen(val route: String) {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MediMate(navController: NavHostController) {
+fun MediMate(navController: NavHostController, themeViewModel: ThemeViewModel) {
     val appContext = LocalContext.current
     val database = remember {
         Room.databaseBuilder(
@@ -97,7 +102,7 @@ fun MediMate(navController: NavHostController) {
                     Screen.Landing.route,
                     inclusive = false
                 )
-            })
+            }, themeViewModel = themeViewModel)
         }
         composable(Screen.AddMeds.route) {
             val addScreenScope = rememberCoroutineScope()
