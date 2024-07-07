@@ -72,7 +72,8 @@ fun LandingScreen(
     medication: () -> Unit,
     viewModel: AppViewModel = viewModel(factory = AppViewModel.Factory),
     meds: List<Meds>,
-    editMed: (Meds) -> Unit
+    editMed: (Meds) -> Unit,
+    deleteMed: (Meds) -> Unit
 ) {
     val viewState by viewModel.uiState.collectAsState()
     LandingScreenUi(
@@ -82,7 +83,8 @@ fun LandingScreen(
         medication = { medication() },
         username = viewState.userName,
         meds = meds,
-        editMed = editMed
+        editMed = editMed,
+        deleteMed = deleteMed
     )
 }
 
@@ -95,7 +97,8 @@ private fun LandingScreenUi(
     medication: () -> Unit,
     username: String,
     meds: List<Meds>,
-    editMed: (Meds) -> Unit
+    editMed: (Meds) -> Unit,
+    deleteMed: (Meds) -> Unit
 ) {
 
     Column(Modifier.fillMaxWidth()) {
@@ -197,7 +200,8 @@ private fun LandingScreenUi(
                 meds.forEach { item ->
                     MedicationRow(meds = item,
                         medication = { medication() },
-                        editMed = { editMed(item) })
+                        editMed = { editMed(item) },
+                        deleteMed = {deleteMed(item)})
                 }
 
             }
@@ -318,7 +322,7 @@ fun minusWorkingDays(days: Int, date: LocalDate): LocalDate {
 }
 
 @Composable
-fun MedicationRow(meds: Meds, medication: () -> Unit, editMed: (Meds) -> Unit) {
+fun MedicationRow(meds: Meds, medication: () -> Unit, editMed: (Meds) -> Unit, deleteMed: (Meds) -> Unit) {
     Column(
         modifier = Modifier
             .padding(horizontal = 30.dp, vertical = 4.dp)
@@ -327,7 +331,7 @@ fun MedicationRow(meds: Meds, medication: () -> Unit, editMed: (Meds) -> Unit) {
         Row(
             modifier = Modifier
                 .padding(10.dp)
-                .combinedClickable(onClick = { medication() }, onDoubleClick = { editMed(meds) })
+                .combinedClickable(onClick = { medication() }, onDoubleClick = { editMed(meds) }, onLongClickLabel = "Delete?", onLongClick = {deleteMed(meds)})
                 .fillMaxWidth(), horizontalArrangement = Arrangement.Center
         ) {
             Text(
@@ -420,6 +424,6 @@ fun LandingBar(settings: () -> Unit, calendar: () -> Unit) {
 @Composable
 fun LandingPreview() {
     MediMateTheme {
-        LandingScreenUi({}, {}, {}, {}, "Emily", meds, {})
+        LandingScreenUi({}, {}, {}, {}, "Emily", meds, {}, {})
     }
 }

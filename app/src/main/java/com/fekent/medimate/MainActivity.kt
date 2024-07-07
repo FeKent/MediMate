@@ -78,6 +78,7 @@ fun MediMate(navController: NavHostController) {
 
     NavHost(navController = navController, startDestination = Screen.Landing.route) {
         composable(Screen.Landing.route) {
+            val landingScreenScope = rememberCoroutineScope()
             val meds by database.medsDao().allMeds().collectAsState(initial = emptyList())
 
             LandingScreen(
@@ -86,7 +87,8 @@ fun MediMate(navController: NavHostController) {
                 addMeds = { navController.navigate(Screen.AddMeds.route) },
                 medication = { navController.navigate(Screen.Medication.route) },
                 meds = meds,
-                editMed = {med -> navController.navigate("EditMeds/${med.id}")}
+                editMed = {med -> navController.navigate("EditMeds/${med.id}")},
+                deleteMed = {med -> landingScreenScope.launch { database.medsDao().delete(med) }}
             )
         }
         composable(Screen.Settings.route) {
