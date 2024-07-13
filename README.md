@@ -13,8 +13,12 @@ Includes:
   - Username is set in settings saved to a repository using DataStore
 - Two separate tables that display medication & dosage, and dates to order refills of each medication
   - Both have vertical scroll to ensure the data can fit on the screen.
- 
-![image](https://github.com/user-attachments/assets/5bcc0ef7-80f0-4bed-ae59-ecdf5e7ee53c)![image](https://github.com/user-attachments/assets/08e5a930-59f0-4a51-aba5-9965fbd0ef2a)
+
+
+<div style="display: flex; justify-content: space-between;">
+<img src="https://github.com/user-attachments/assets/5bcc0ef7-80f0-4bed-ae59-ecdf5e7ee53c" style="width: 48%;"/>
+<img src="https://github.com/user-attachments/assets/08e5a930-59f0-4a51-aba5-9965fbd0ef2a" style="width: 48%;"/>
+</div>
 
 ---
 ## Add/Edit Screen
@@ -25,9 +29,12 @@ Includes:
   - Also uses Dao functions to add and update data in the app's Room Database
 - Logic that calculates when the last of the entered medication will be used
   - Using `LocalDate` functions
-- Uses a nullable parameter to change the screen from Add to Edit Medication, which has the `Textfields` prefilled with the data to be edited 
- 
-![image](https://github.com/user-attachments/assets/2293ef58-a544-422b-8bcd-da6baf8523f2)![image](https://github.com/user-attachments/assets/73ecff31-e52b-4dac-938f-b6f579680e4e)
+- Uses a nullable parameter to change the screen from Add to Edit Medication, which has the `Textfields` prefilled with the data to be edited
+  
+<div style="display: flex; justify-content: space-between;">
+<img scr="https://github.com/user-attachments/assets/2293ef58-a544-422b-8bcd-da6baf8523f2" style="width: 48%;"/>  
+<img scr="https://github.com/user-attachments/assets/73ecff31-e52b-4dac-938f-b6f579680e4e" style="width: 48%;"/>
+</div>
 
 ---
 ## Settings Screen
@@ -39,7 +46,12 @@ Includes:
   - Theme changes are handled through the ThemeViewModel, the state of which is collected in the `setContent` function of the `MainActivity`
 - Will allow users to toggle notifications on / off
 
-![image](https://github.com/user-attachments/assets/4b069205-ab83-4c9b-8d04-1a72774b8dc8)![image](https://github.com/user-attachments/assets/403abccc-0a2a-4934-a9a7-2bbe7b155c29)
+<div style="display: flex; justify-content: space-between;">
+<img scr="https://github.com/user-attachments/assets/4b069205-ab83-4c9b-8d04-1a72774b8dc8" style="width: 48%;"/>  
+<img scr="https://github.com/user-attachments/assets/403abccc-0a2a-4934-a9a7-2bbe7b155c29" style="width: 48%;"/>
+</div>
+
+
 
 
 
