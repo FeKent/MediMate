@@ -31,9 +31,10 @@ Includes:
   - Using `LocalDate` functions
 - Uses a nullable parameter to change the screen from Add to Edit Medication, which has the `Textfields` prefilled with the data to be edited
   
+  
 <div style="display: flex; justify-content: space-between;">
-<img scr="https://github.com/user-attachments/assets/2293ef58-a544-422b-8bcd-da6baf8523f2" style="width: 48%;"/>  
-<img scr="https://github.com/user-attachments/assets/73ecff31-e52b-4dac-938f-b6f579680e4e" style="width: 48%;"/>
+<img src="https://github.com/user-attachments/assets/2293ef58-a544-422b-8bcd-da6baf8523f2" style="width: 48%;"/>  
+<img src="https://github.com/user-attachments/assets/73ecff31-e52b-4dac-938f-b6f579680e4e" style="width: 48%;"/>
 </div>
 
 ---
@@ -46,9 +47,10 @@ Includes:
   - Theme changes are handled through the ThemeViewModel, the state of which is collected in the `setContent` function of the `MainActivity`
 - Will allow users to toggle notifications on / off
 
+
 <div style="display: flex; justify-content: space-between;">
-<img scr="https://github.com/user-attachments/assets/4b069205-ab83-4c9b-8d04-1a72774b8dc8" style="width: 48%;"/>  
-<img scr="https://github.com/user-attachments/assets/403abccc-0a2a-4934-a9a7-2bbe7b155c29" style="width: 48%;"/>
+<img src="https://github.com/user-attachments/assets/4b069205-ab83-4c9b-8d04-1a72774b8dc8" style="width: 48%;"/>  
+<img src="https://github.com/user-attachments/assets/403abccc-0a2a-4934-a9a7-2bbe7b155c29" style="width: 48%;"/>
 </div>
 
 
