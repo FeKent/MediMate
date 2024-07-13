@@ -53,8 +53,13 @@ Includes:
 <img src="https://github.com/user-attachments/assets/403abccc-0a2a-4934-a9a7-2bbe7b155c29" style="width: 48%;"/>
 </div>
 
+---
 
+# Features
 
+- **MVVM Design Pattern:** The application follows the Model-View-ViewModel (MVVM) design pattern, ensuring a clean and maintainable code structure.
+- **Compose Navigation and ViewModels:** Utilizing Jetpack Compose for UI and navigation, along with ViewModels for managing UI-related data, the application offers a modern and efficient development approach.
+- **Room** was used to make and use the Medication Database
 
 
 
