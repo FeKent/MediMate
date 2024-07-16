@@ -236,7 +236,8 @@ private fun LandingScreenUi(
                     .height(125.dp)
                     .verticalScroll(rememberScrollState())
             ) {
-                meds.forEach { item ->
+                val sortedDateMeds = meds.sortedBy { it.refill }
+                sortedDateMeds.forEach { item ->
                     MedicationRefill(meds = item, dateString = item.refill.toString())
                 }
             }
