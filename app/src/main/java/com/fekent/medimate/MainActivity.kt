@@ -1,5 +1,7 @@
 package com.fekent.medimate
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -42,9 +44,20 @@ class MainActivity : ComponentActivity() {
     private val themeViewModel: ThemeViewModel by viewModels { ThemeViewModel.Factory() }
 
     @RequiresApi(Build.VERSION_CODES.O)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Create the NotificationChannel.
+            val name = "Refill"
+            val descriptionText = "Refill Medication"
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val mChannel = NotificationChannel("refill", name, importance)
+            mChannel.description = descriptionText
+            val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(mChannel)
+        }
         setContent {
             val isDarkTheme by themeViewModel.isDarkTheme.collectAsState()
             MediMateTheme(darkTheme = isDarkTheme) {
