@@ -22,6 +22,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.app.NotificationCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -49,7 +50,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // Create the NotificationChannel.
             val name = "Refill"
             val descriptionText = "Refill Medication"
             val importance = NotificationManager.IMPORTANCE_HIGH
@@ -58,6 +58,12 @@ class MainActivity : ComponentActivity() {
             val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(mChannel)
         }
+        var builder = NotificationCompat.Builder(this, "refill")
+            .setSmallIcon(R.drawable.pill)
+            .setContentTitle("Refill")
+            .setContentText("Medication Refill Due")
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+
         setContent {
             val isDarkTheme by themeViewModel.isDarkTheme.collectAsState()
             MediMateTheme(darkTheme = isDarkTheme) {
