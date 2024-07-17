@@ -2,6 +2,7 @@
 
 package com.fekent.medimate.composables
 
+import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -186,6 +187,9 @@ fun SettingsScreen(
                     ),
                     modifier = Modifier.padding(horizontal = 8.dp)
                 )
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                NotificationPermission()
             }
         }
     }

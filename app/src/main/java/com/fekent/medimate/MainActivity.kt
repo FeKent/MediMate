@@ -39,8 +39,10 @@ import com.fekent.medimate.data.Meds
 import com.fekent.medimate.data.MedsDatabase
 import com.fekent.medimate.ui.theme.MediMateTheme
 import com.fekent.medimate.ui.viewModels.ThemeViewModel
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalPermissionsApi::class)
 class MainActivity : ComponentActivity() {
     private val themeViewModel: ThemeViewModel by viewModels { ThemeViewModel.Factory() }
 
@@ -71,12 +73,14 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+
                     MediMate(navController = rememberNavController(), themeViewModel = themeViewModel)
+                    }
                 }
             }
         }
     }
-}
+
 
 sealed class Screen(val route: String) {
     object Landing : Screen("Landing")

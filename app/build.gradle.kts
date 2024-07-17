@@ -52,6 +52,7 @@ android {
 
 dependencies {
 
+    implementation (libs.accompanist.permissions)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.complier)
     implementation(libs.androidx.datastore.preferences)
