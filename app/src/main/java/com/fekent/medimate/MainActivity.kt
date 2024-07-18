@@ -33,6 +33,7 @@ import androidx.room.Room
 import com.fekent.medimate.composables.AddMedsScreen
 import com.fekent.medimate.composables.CalendarScreen
 import com.fekent.medimate.composables.LandingScreen
+import com.fekent.medimate.composables.LaunchPermissionRequest
 import com.fekent.medimate.composables.MedicationScreen
 import com.fekent.medimate.composables.SettingsScreen
 import com.fekent.medimate.data.Meds
@@ -67,14 +68,16 @@ class MainActivity : ComponentActivity() {
             .setPriority(NotificationCompat.PRIORITY_HIGH)
 
         setContent {
+
             val isDarkTheme by themeViewModel.isDarkTheme.collectAsState()
             MediMateTheme(darkTheme = isDarkTheme) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-
                     MediMate(navController = rememberNavController(), themeViewModel = themeViewModel)
+                    val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+                    notificationManager.notify(123, builder.build())
                     }
                 }
             }
