@@ -33,19 +33,20 @@ import androidx.room.Room
 import com.fekent.medimate.composables.AddMedsScreen
 import com.fekent.medimate.composables.CalendarScreen
 import com.fekent.medimate.composables.LandingScreen
-import com.fekent.medimate.composables.LaunchPermissionRequest
 import com.fekent.medimate.composables.MedicationScreen
 import com.fekent.medimate.composables.SettingsScreen
 import com.fekent.medimate.data.Meds
 import com.fekent.medimate.data.MedsDatabase
+import com.fekent.medimate.data.UserRepository
 import com.fekent.medimate.ui.theme.MediMateTheme
 import com.fekent.medimate.ui.viewModels.ThemeViewModel
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalPermissionsApi::class)
+
 class MainActivity : ComponentActivity() {
-    private val themeViewModel: ThemeViewModel by viewModels { ThemeViewModel.Factory() }
+
+    private val themeViewModel: ThemeViewModel by viewModels {
+        ThemeViewModel.Factory(userRepository = UserRepository(dataStore)) }
 
     @RequiresApi(Build.VERSION_CODES.O)
 

@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 data class UiState(val userName: String)
 
 
-class AppViewModel(private val userRepository: UserRepository): ViewModel(){
+class AppViewModel(val userRepository: UserRepository): ViewModel(){
     val uiState: StateFlow<UiState> =
         userRepository.currentUserName.map { userName ->
             UiState(userName)

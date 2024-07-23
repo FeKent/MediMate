@@ -58,7 +58,7 @@ import com.fekent.medimate.ui.viewModels.ThemeViewModel
 fun SettingsScreen(
     back: () -> Unit,
     appViewModel: AppViewModel = viewModel(factory = AppViewModel.Factory),
-    themeViewModel: ThemeViewModel
+    themeViewModel: ThemeViewModel = viewModel(factory = ThemeViewModel.Factory(userRepository = appViewModel.userRepository))
 ) {
     val isDarkTheme by themeViewModel.isDarkTheme.collectAsState()
     var themeChecked by remember { mutableStateOf(isDarkTheme) }
@@ -68,18 +68,19 @@ fun SettingsScreen(
 
     SettingsScreenUI(
         username = username,
-        onUsernameChange = {username = it},
-        onUsernameDone = {appViewModel.saveUserName(username)},
+        onUsernameChange = { username = it },
+        onUsernameDone = { appViewModel.saveUserName(username) },
         themeChecked = themeChecked,
-        onThemeToggle = {isChecked ->
+        onThemeToggle = { isChecked ->
             themeChecked = isChecked
             themeViewModel.toggleTheme(isChecked)
         },
         notifChecked = notifChecked,
-        onNotifToggle = {notifChecked = it},
+        onNotifToggle = { notifChecked = it },
         back = back,
         keyboardController = keyboardController,
-        isPreview = false)
+        isPreview = false
+    )
 }
 
 
