@@ -2,7 +2,9 @@
 
 package com.fekent.medimate.composables
 
+import android.Manifest
 import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,6 +29,7 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -53,7 +56,11 @@ import com.fekent.medimate.R
 import com.fekent.medimate.ui.theme.MediMateTheme
 import com.fekent.medimate.ui.viewModels.AppViewModel
 import com.fekent.medimate.ui.viewModels.ThemeViewModel
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberPermissionState
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun SettingsScreen(
     back: () -> Unit,
@@ -65,6 +72,17 @@ fun SettingsScreen(
     var notifChecked by remember { mutableStateOf(false) }
     var username by remember { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
+    val permissionChecked = rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
+
+    // Initialize notifChecked based on permission state
+    LaunchedEffect(permissionChecked.permissionRequested) {
+        notifChecked = permissionChecked.hasPermission
+    }
+
+    // Update notifChecked when permission state changes
+    LaunchedEffect(permissionChecked.hasPermission) {
+        notifChecked = permissionChecked.hasPermission
+    }
 
     SettingsScreenUI(
         username = username,
@@ -76,7 +94,14 @@ fun SettingsScreen(
             themeViewModel.toggleTheme(isChecked)
         },
         notifChecked = notifChecked,
-        onNotifToggle = { notifChecked = it },
+        onNotifToggle = {isChecked ->
+            if (isChecked) {
+                // Request permission if switch is checked
+                permissionChecked.launchPermissionRequest()
+            }
+            // Update notifChecked to reflect the switch state
+            notifChecked = isChecked
+        },
         back = back,
         keyboardController = keyboardController,
         isPreview = false
