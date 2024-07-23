@@ -232,15 +232,16 @@ fun SettingsScreenUI(
                         )
                     },
                     colors = SwitchDefaults.colors(
-                        checkedTrackColor = MaterialTheme.colorScheme.background,
-                        checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
-                        uncheckedThumbColor = Color.Transparent,
-                        checkedBorderColor = MaterialTheme.colorScheme.onPrimary,
-                        uncheckedBorderColor = MaterialTheme.colorScheme.onPrimary,
-                        checkedIconColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                        uncheckedIconColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        disabledCheckedTrackColor = MaterialTheme.colorScheme.background,
+                        disabledCheckedThumbColor = MaterialTheme.colorScheme.onPrimary,
+                        disabledUncheckedThumbColor = Color.Transparent,
+                        disabledCheckedBorderColor = MaterialTheme.colorScheme.onPrimary,
+                        disabledUncheckedBorderColor = MaterialTheme.colorScheme.onPrimary,
+                        disabledCheckedIconColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        disabledUncheckedIconColor = MaterialTheme.colorScheme.onSecondaryContainer,
                     ),
-                    modifier = Modifier.padding(horizontal = 8.dp)
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                    enabled = false
                 )
             }
             Spacer(Modifier.size(30.dp))
