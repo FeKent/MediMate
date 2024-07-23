@@ -37,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -65,6 +66,37 @@ fun SettingsScreen(
     var username by remember { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
 
+    SettingsScreenUI(
+        username = username,
+        onUsernameChange = {username = it},
+        onUsernameDone = {appViewModel.saveUserName(username)},
+        themeChecked = themeChecked,
+        onThemeToggle = {isChecked ->
+            themeChecked = isChecked
+            themeViewModel.toggleTheme(isChecked)
+        },
+        notifChecked = notifChecked,
+        onNotifToggle = {notifChecked = it},
+        back = back,
+        keyboardController = keyboardController,
+        isPreview = false)
+}
+
+
+@Composable
+fun SettingsScreenUI(
+    username: String,
+    onUsernameChange: (String) -> Unit,
+    onUsernameDone: () -> Unit,
+    themeChecked: Boolean,
+    onThemeToggle: (Boolean) -> Unit,
+    notifChecked: Boolean,
+    onNotifToggle: (Boolean) -> Unit,
+    back: () -> Unit,
+    keyboardController: SoftwareKeyboardController? = null,
+    isPreview: Boolean = false
+) {
+
     Column(modifier = Modifier.fillMaxSize()) {
         SettingsBar { back() }
         Spacer(Modifier.size(30.dp))
@@ -86,7 +118,7 @@ fun SettingsScreen(
                 Spacer(Modifier.size(8.dp))
                 TextField(
                     value = username,
-                    onValueChange = { username = it },
+                    onValueChange = onUsernameChange,
                     textStyle = TextStyle(
                         color = MaterialTheme.colorScheme.primary,
                         fontSize = 20.sp,
@@ -98,7 +130,7 @@ fun SettingsScreen(
                         imeAction = ImeAction.Done
                     ),
                     keyboardActions = KeyboardActions(onDone = {
-                        appViewModel.saveUserName(username)
+                        onUsernameDone()
                         keyboardController?.hide()
                     })
                 )
@@ -124,10 +156,7 @@ fun SettingsScreen(
                 Spacer(Modifier.size(8.dp))
                 Switch(
                     checked = themeChecked,
-                    onCheckedChange = { isChecked ->
-                        themeChecked = isChecked
-                        themeViewModel.toggleTheme(isChecked)
-                    },
+                    onCheckedChange = onThemeToggle,
                     thumbContent = {
                         Icon(
                             painter = painterResource(id = R.drawable.pill),
@@ -168,7 +197,7 @@ fun SettingsScreen(
                 Spacer(Modifier.size(8.dp))
                 Switch(
                     checked = notifChecked,
-                    onCheckedChange = { notifChecked = it },
+                    onCheckedChange = onNotifToggle,
                     thumbContent = {
                         Icon(
                             painter = painterResource(id = R.drawable.pill),
@@ -188,7 +217,7 @@ fun SettingsScreen(
                     modifier = Modifier.padding(horizontal = 8.dp)
                 )
             }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (!isPreview && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 NotificationPermission()
             }
         }
@@ -227,7 +256,18 @@ fun SettingsBar(back: () -> Unit) {
 @Preview(showSystemUi = true)
 @Composable
 fun SettingPreview() {
-    MediMateTheme{
-        SettingsScreen({}, themeViewModel = ThemeViewModel() )
+    MediMateTheme {
+        SettingsScreenUI(
+            username = "Snippy",
+            onUsernameChange = {},
+            onUsernameDone = {},
+            themeChecked = false,
+            onThemeToggle = {},
+            notifChecked = false,
+            onNotifToggle = {},
+            back = {},
+            keyboardController = null,
+            isPreview = true
+        )
     }
 }
