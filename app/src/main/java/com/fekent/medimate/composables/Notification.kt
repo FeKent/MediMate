@@ -7,11 +7,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 
-class Notification {
-}
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(ExperimentalPermissionsApi::class)
@@ -36,7 +36,10 @@ fun NotificationPermission() {
                         "Please grant the permission"
             }
             Text(textToShow)
-            Button(onClick = { notificationPermissionState.launchPermissionRequest() }) {
+            Button(
+                onClick = { notificationPermissionState.launchPermissionRequest() },
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            ) {
                 Text("Request permission")
             }
         }
@@ -45,7 +48,7 @@ fun NotificationPermission() {
 
 @Composable
 @OptIn(ExperimentalPermissionsApi::class)
-fun LaunchPermissionRequest(){
+fun LaunchPermissionRequest() {
     val notificationPermissionState =
         rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
     notificationPermissionState.launchPermissionRequest()

@@ -218,8 +218,15 @@ fun SettingsScreenUI(
                     modifier = Modifier.padding(horizontal = 8.dp)
                 )
             }
-            if (!isPreview && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                NotificationPermission()
+            Spacer(Modifier.size(30.dp))
+            Row(
+                modifier = Modifier
+                    .padding(horizontal = 40.dp)
+                    .fillMaxWidth()
+            ) {
+                if (!isPreview && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    NotificationPermission()
+                }
             }
         }
     }
