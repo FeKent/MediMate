@@ -1,55 +1,67 @@
 package com.fekent.medimate.composables
 
 import android.Manifest
+import android.app.NotificationManager
+import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.app.NotificationCompat
+import com.fekent.medimate.R
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
+import kotlin.random.Random
+
+
+class NotificationHandler(private val context: Context) {
+    private val notificationManager = context.getSystemService(NotificationManager::class.java)
+    private val notificationChannelID = "refill"
+
+    fun showSimpleNotification() {
+        val notification = NotificationCompat.Builder(context, notificationChannelID)
+            .setContentTitle("Simple Notification")
+            .setContentText("Message or text with notification")
+            .setSmallIcon(R.drawable.pill)
+            .setPriority(NotificationManager.IMPORTANCE_HIGH)
+            .setAutoCancel(true)
+            .build()  // finalizes the creation
+
+        notificationManager.notify(Random.nextInt(), notification)
+    }
+}
 
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun NotificationPermission() {
-    val notificationPermissionState =
+    val context = LocalContext.current
+    val postNotificationPermission =
         rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
+    val notificationHandler = NotificationHandler(context)
 
-    if (notificationPermissionState.hasPermission) {
-        Text(text = "Notification Permission Granted")
-    } else {
-        Column {
-            val textToShow = if (notificationPermissionState.shouldShowRationale) {
-                // If the user has denied the permission but the rationale can be shown,
-                // then gently explain why the app requires this permission
-                "The notifications are important for this app. Please grant the permission."
-            } else {
-                // If it's the first time the user lands on this feature, or the user
-                // doesn't want to be asked again for this permission, explain that the
-                // permission is required
-                "Notification permission required for this feature to be available. " +
-                        "Please grant the permission"
-            }
-            Text(textToShow)
-            Button(
-                onClick = { notificationPermissionState.launchPermissionRequest() },
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            ) {
-                Text("Request permission")
-            }
+    LaunchedEffect(key1 = true) {
+        if (!postNotificationPermission.hasPermission) {
+            postNotificationPermission.launchPermissionRequest()
+        } else {
+            postNotificationPermission.permissionRequested
         }
     }
-}
 
-@Composable
-@OptIn(ExperimentalPermissionsApi::class)
-fun LaunchPermissionRequest() {
-    val notificationPermissionState =
-        rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
-    notificationPermissionState.launchPermissionRequest()
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Button(
+            onClick = {
+                notificationHandler.showSimpleNotification()
+            },
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        ) { Text(text = "Simple notification") }
+    }
 }
