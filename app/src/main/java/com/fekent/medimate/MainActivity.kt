@@ -77,8 +77,8 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     MediMate(navController = rememberNavController(), themeViewModel = themeViewModel)
-                    val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-                    notificationManager.notify(123, builder.build())
+//                    val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+//                    notificationManager.notify(123, builder.build())
                     }
                 }
             }
@@ -124,12 +124,14 @@ fun MediMate(navController: NavHostController, themeViewModel: ThemeViewModel) {
             )
         }
         composable(Screen.Settings.route) {
-            SettingsScreen(back = {
-                navController.popBackStack(
-                    Screen.Landing.route,
-                    inclusive = false
-                )
-            }, themeViewModel = themeViewModel)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                SettingsScreen(back = {
+                    navController.popBackStack(
+                        Screen.Landing.route,
+                        inclusive = false
+                    )
+                }, themeViewModel = themeViewModel)
+            }
         }
         composable(Screen.AddMeds.route) {
             val addScreenScope = rememberCoroutineScope()
