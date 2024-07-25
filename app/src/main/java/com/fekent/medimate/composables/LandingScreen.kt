@@ -288,9 +288,9 @@ fun MedicationRefill(meds: Meds, dateString: String) {
                 .fillMaxWidth(), horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = meds.id.toString(), textAlign = TextAlign.Center,
+                text = meds.name, textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSecondaryContainer,
-                modifier = Modifier.weight(0.3f)
+                modifier = Modifier.weight(1f)
             )
             VerticalDivider(
                 modifier = Modifier
@@ -335,18 +335,18 @@ fun MedicationRow(meds: Meds, medication: () -> Unit, editMed: (Meds) -> Unit, d
                 .combinedClickable(onClick = { medication() }, onDoubleClick = { editMed(meds) }, onLongClickLabel = "Delete?", onLongClick = {deleteMed(meds)})
                 .fillMaxWidth(), horizontalArrangement = Arrangement.Center
         ) {
-            Text(
-                text = meds.id.toString(),
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.secondary,
-                modifier = Modifier.weight(0.3f)
-            )
-            VerticalDivider(
-                modifier = Modifier
-                    .height(21.dp)
-                    .width(2.dp),
-                color = MaterialTheme.colorScheme.secondary
-            )
+//            Text(
+//                text = meds.id.toString(),
+//                textAlign = TextAlign.Center,
+//                color = MaterialTheme.colorScheme.secondary,
+//                modifier = Modifier.weight(0.3f)
+//            )
+//            VerticalDivider(
+//                modifier = Modifier
+//                    .height(21.dp)
+//                    .width(2.dp),
+//                color = MaterialTheme.colorScheme.secondary
+//            )
             Text(
                 text = meds.name,
                 fontWeight = FontWeight.SemiBold,
