@@ -59,8 +59,6 @@ import com.fekent.medimate.data.Meds
 import com.fekent.medimate.data.meds
 import com.fekent.medimate.ui.theme.MediMateTheme
 import com.fekent.medimate.ui.viewModels.AppViewModel
-import java.time.DayOfWeek
-import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -238,7 +236,7 @@ private fun LandingScreenUi(
             ) {
                 val sortedDateMeds = meds.sortedBy { it.refill }
                 sortedDateMeds.forEach { item ->
-                    MedicationRefill(meds = item, dateString = item.refill.toString())
+                    MedicationRefill(meds = item)
                 }
             }
             Row(
@@ -272,9 +270,8 @@ private fun LandingScreenUi(
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MedicationRefill(meds: Meds, dateString: String) {
-    val date = LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE)
-    val refillDate = minusWorkingDays(days = 7, date = date)
+fun MedicationRefill(meds: Meds) {
+    val refillDate = meds.refill
     val formattedDate = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(refillDate)
 
     Column(
@@ -308,21 +305,7 @@ fun MedicationRefill(meds: Meds, dateString: String) {
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
-fun minusWorkingDays(days: Int, date: LocalDate): LocalDate {
-    var refillDate = date
-    var remainingDays = days
 
-    while (remainingDays > 0) {
-        refillDate = refillDate.minusDays(1)
-        if (refillDate.dayOfWeek == DayOfWeek.SATURDAY || refillDate.dayOfWeek == DayOfWeek.SUNDAY) {
-            remainingDays
-        } else {
-            remainingDays--
-        }
-    }
-    return refillDate
-}
 
 @Composable
 fun MedicationRow(

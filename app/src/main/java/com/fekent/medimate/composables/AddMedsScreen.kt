@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fekent.medimate.data.Meds
 import com.fekent.medimate.ui.theme.MediMateTheme
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -131,6 +132,30 @@ fun AddMedsScreen(back: () -> Unit, onMedEntered: (Meds) -> Unit, medToEdit: Med
                         colors = CheckboxDefaults.colors(uncheckedColor = MaterialTheme.colorScheme.primary)
                     )
                 }
+
+                val orderRefill = minusWorkingDays(7, refillDate)
+                val formattedOrderRefill =
+                    DateTimeFormatter.ofPattern("dd/MM/yyyy").format(orderRefill)
+
+                if (checked) {
+                    Spacer(Modifier.size(16.dp))
+                    Row {
+                        Text(
+                            text = "Order Refill On:",
+                            fontSize = 16.sp,
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.align(Alignment.CenterVertically)
+                        )
+                        Spacer(Modifier.size(4.dp))
+                        Text(
+                            text = formattedOrderRefill.toString(),
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+
                 Spacer(Modifier.size(32.dp))
                 IconButton(onClick = {
                     val newMeds = Meds(
@@ -138,7 +163,7 @@ fun AddMedsScreen(back: () -> Unit, onMedEntered: (Meds) -> Unit, medToEdit: Med
                         name = name,
                         dose = dose.toInt(),
                         pillCount = pillCount.toInt(),
-                        refill = refillDate
+                        refill = if (checked) orderRefill else refillDate
                     )
                     onMedEntered.invoke(newMeds)
                 }) {
@@ -154,6 +179,22 @@ fun AddMedsScreen(back: () -> Unit, onMedEntered: (Meds) -> Unit, medToEdit: Med
 
         }
     }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun minusWorkingDays(days: Int, date: LocalDate): LocalDate {
+    var refillDate = date
+    var remainingDays = days
+
+    while (remainingDays > 0) {
+        refillDate = refillDate.minusDays(1)
+        if (refillDate.dayOfWeek == DayOfWeek.SATURDAY || refillDate.dayOfWeek == DayOfWeek.SUNDAY) {
+            remainingDays
+        } else {
+            remainingDays--
+        }
+    }
+    return refillDate
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
