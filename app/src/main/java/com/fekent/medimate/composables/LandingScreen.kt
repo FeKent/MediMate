@@ -201,7 +201,7 @@ private fun LandingScreenUi(
                     MedicationRow(meds = item,
                         medication = { medication() },
                         editMed = { editMed(item) },
-                        deleteMed = {deleteMed(item)})
+                        deleteMed = { deleteMed(item) })
                 }
 
             }
@@ -315,7 +315,9 @@ fun minusWorkingDays(days: Int, date: LocalDate): LocalDate {
 
     while (remainingDays > 0) {
         refillDate = refillDate.minusDays(1)
-        if (refillDate.dayOfWeek != DayOfWeek.SATURDAY || refillDate.dayOfWeek != DayOfWeek.SUNDAY) {
+        if (refillDate.dayOfWeek == DayOfWeek.SATURDAY || refillDate.dayOfWeek == DayOfWeek.SUNDAY) {
+            remainingDays
+        } else {
             remainingDays--
         }
     }
@@ -323,7 +325,12 @@ fun minusWorkingDays(days: Int, date: LocalDate): LocalDate {
 }
 
 @Composable
-fun MedicationRow(meds: Meds, medication: () -> Unit, editMed: (Meds) -> Unit, deleteMed: (Meds) -> Unit) {
+fun MedicationRow(
+    meds: Meds,
+    medication: () -> Unit,
+    editMed: (Meds) -> Unit,
+    deleteMed: (Meds) -> Unit
+) {
     Column(
         modifier = Modifier
             .padding(horizontal = 30.dp, vertical = 4.dp)
@@ -332,21 +339,13 @@ fun MedicationRow(meds: Meds, medication: () -> Unit, editMed: (Meds) -> Unit, d
         Row(
             modifier = Modifier
                 .padding(10.dp)
-                .combinedClickable(onClick = { medication() }, onDoubleClick = { editMed(meds) }, onLongClickLabel = "Delete?", onLongClick = {deleteMed(meds)})
+                .combinedClickable(
+                    onClick = { medication() },
+                    onDoubleClick = { editMed(meds) },
+                    onLongClickLabel = "Delete?",
+                    onLongClick = { deleteMed(meds) })
                 .fillMaxWidth(), horizontalArrangement = Arrangement.Center
         ) {
-//            Text(
-//                text = meds.id.toString(),
-//                textAlign = TextAlign.Center,
-//                color = MaterialTheme.colorScheme.secondary,
-//                modifier = Modifier.weight(0.3f)
-//            )
-//            VerticalDivider(
-//                modifier = Modifier
-//                    .height(21.dp)
-//                    .width(2.dp),
-//                color = MaterialTheme.colorScheme.secondary
-//            )
             Text(
                 text = meds.name,
                 fontWeight = FontWeight.SemiBold,
