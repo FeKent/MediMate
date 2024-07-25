@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -59,14 +60,17 @@ fun AddMedsScreen(back: () -> Unit, onMedEntered: (Meds) -> Unit, medToEdit: Med
 
 
     Column(modifier = Modifier.fillMaxSize()) {
-        AddMedsBar(back = {back()}, title = "${if (editMode) "Edit" else "Add"} Medication")
+        AddMedsBar(back = { back() }, title = "${if (editMode) "Edit" else "Add"} Medication")
         Spacer(Modifier.size(24.dp))
         Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             TextField(
                 value = name,
                 onValueChange = { name = it },
                 label = { Text(text = "Medication Name") },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next,
+                    capitalization = KeyboardCapitalization.Words
+                )
             )
             Spacer(Modifier.size(8.dp))
             TextField(
