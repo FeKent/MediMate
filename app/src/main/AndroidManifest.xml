@@ -15,6 +15,7 @@
         android:theme="@style/Theme.MediMate"
         tools:targetApi="31"
         android:name=".MyApplication">
+        <receiver android:name=".composables.RefillAlarmReceiver" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

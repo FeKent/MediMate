@@ -252,6 +252,7 @@ fun SettingsScreenUI(
             ) {
                 if (!isPreview && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     NotificationPermission()
+                    AlarmPermission()
                 }
             }
         }

@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -58,7 +59,7 @@ fun AddMedsScreen(back: () -> Unit, onMedEntered: (Meds) -> Unit, medToEdit: Med
     var checked by remember { mutableStateOf(false) }
     val keyboardManager = LocalFocusManager.current
     val editMode = medToEdit != null
-
+    val context = LocalContext.current
 
     Column(modifier = Modifier.fillMaxSize()) {
         AddMedsBar(back = { back() }, title = "${if (editMode) "Edit" else "Add"} Medication")
@@ -166,6 +167,9 @@ fun AddMedsScreen(back: () -> Unit, onMedEntered: (Meds) -> Unit, medToEdit: Med
                         refill = if (checked) orderRefill else refillDate
                     )
                     onMedEntered.invoke(newMeds)
+                    if (checked) {
+                        createRefillAlarm(context.applicationContext, newMeds)
+                    }
                 }) {
                     Icon(
                         Icons.Filled.AddCircle,
@@ -196,6 +200,9 @@ fun minusWorkingDays(days: Int, date: LocalDate): LocalDate {
     }
     return refillDate
 }
+
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

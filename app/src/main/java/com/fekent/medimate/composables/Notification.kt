@@ -1,9 +1,15 @@
 package com.fekent.medimate.composables
 
 import android.Manifest
+import android.app.AlarmManager
+import android.app.AlarmManager.RTC_WAKEUP
 import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +25,7 @@ import com.fekent.medimate.R
 import com.fekent.medimate.data.Meds
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
+import java.time.ZoneOffset
 import kotlin.random.Random
 
 
@@ -37,18 +44,35 @@ class NotificationHandler(private val context: Context) {
 
         notificationManager.notify(Random.nextInt(), notification)
     }
+}
 
-    fun refillNotification(med: Meds){
+class RefillAlarmReceiver : BroadcastReceiver() {
+    override fun onReceive(context: Context, intent: Intent) {
+        val notificationChannelID = "refill"
+        val medName = intent.getStringExtra("med_name") ?: return
         val notification = NotificationCompat.Builder(context, notificationChannelID)
-            .setContentTitle("Refill ${med.name}")
-            .setContentText("Time to Order ${med.name}")
+            .setContentTitle("Refill $medName")
+            .setContentText("Time to Order $medName")
             .setSmallIcon(R.drawable.pill)
-            .setPriority(NotificationManager.IMPORTANCE_HIGH)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
             .build()
-
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(Random.nextInt(), notification)
     }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun createRefillAlarm(context: Context, med: Meds) {
+    val alarmManager = context.applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    val intent = Intent(context.applicationContext, RefillAlarmReceiver::class.java).apply {
+        putExtra("med_name", med.name)
+    }
+    val pendingIntent = PendingIntent.getBroadcast(context, med.id, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+    val alarmTime = med.refill.atTime(6, 18).toInstant(ZoneOffset.ofHours(0)).toEpochMilli()
+
+    alarmManager.setExact(RTC_WAKEUP, alarmTime, pendingIntent)
 }
 
 
@@ -76,5 +100,18 @@ fun NotificationPermission() {
             },
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) { Text(text = "Simple notification") }
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun AlarmPermission() {
+    val alarmPermission = rememberPermissionState(permission = Manifest.permission.USE_EXACT_ALARM)
+
+    if (alarmPermission.hasPermission) {
+        Log.d("AddMedsScreen", "USE_EXACT_ALARM permission granted")
+    } else {
+        Log.d("AddMedsScreen", "USE_EXACT_ALARM permission denied")
     }
 }
