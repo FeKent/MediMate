@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.NotificationCompat
 import com.fekent.medimate.R
+import com.fekent.medimate.data.Meds
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import kotlin.random.Random
@@ -33,6 +34,18 @@ class NotificationHandler(private val context: Context) {
             .setPriority(NotificationManager.IMPORTANCE_HIGH)
             .setAutoCancel(true)
             .build()  // finalizes the creation
+
+        notificationManager.notify(Random.nextInt(), notification)
+    }
+
+    fun refillNotification(med: Meds){
+        val notification = NotificationCompat.Builder(context, notificationChannelID)
+            .setContentTitle("Refill ${med.name}")
+            .setContentText("Time to Order ${med.name}")
+            .setSmallIcon(R.drawable.pill)
+            .setPriority(NotificationManager.IMPORTANCE_HIGH)
+            .setAutoCancel(true)
+            .build()
 
         notificationManager.notify(Random.nextInt(), notification)
     }
