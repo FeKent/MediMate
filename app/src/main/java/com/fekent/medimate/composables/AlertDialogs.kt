@@ -1,6 +1,7 @@
 package com.fekent.medimate.composables
 
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.wear.compose.material.Text
@@ -19,7 +20,7 @@ fun DeleteAlertDialog(onDismiss: () -> Unit, onConfirm: () -> Unit, medName: Str
                 Text(text = "Cancel")
             }
         },
-        text = { Text(text = "Delete ${medName}?") }
+        text = { Text(text = "Delete ${medName}?", color = MaterialTheme.colorScheme.onSurface) }
     )
 }
 
@@ -37,7 +38,7 @@ fun EditAlertDialog(onDismiss: () -> Unit, onConfirm: () -> Unit, medName: Strin
                 Text(text = "Cancel")
             }
         },
-        text = { Text(text = "Edit ${medName}?") }
+        text = { Text(text = "Edit ${medName}?", color = MaterialTheme.colorScheme.onSurface) }
     )
 }
 

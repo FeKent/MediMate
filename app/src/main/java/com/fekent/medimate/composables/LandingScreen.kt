@@ -1,6 +1,6 @@
 @file:OptIn(
     ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class,
-    ExperimentalWearMaterialApi::class
+    ExperimentalWearMaterialApi::class, ExperimentalWearMaterialApi::class
 )
 
 package com.fekent.medimate.composables
@@ -44,6 +44,9 @@ import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -60,6 +63,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.wear.compose.foundation.ExperimentalWearFoundationApi
+import androidx.wear.compose.foundation.RevealValue
 import androidx.wear.compose.foundation.rememberRevealState
 import androidx.wear.compose.material.ExperimentalWearMaterialApi
 import androidx.wear.compose.material.SwipeToRevealCard
@@ -68,6 +72,7 @@ import com.fekent.medimate.data.Meds
 import com.fekent.medimate.data.meds
 import com.fekent.medimate.ui.theme.MediMateTheme
 import com.fekent.medimate.ui.viewModels.AppViewModel
+import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -323,17 +328,45 @@ fun SwipeMedication(
     deleteMed: (Meds) -> Unit
 ) {
     val revealState = rememberRevealState()
+    val coroutineScope = rememberCoroutineScope()
+
+    val showDeleteDialog = remember { mutableStateOf(false) }
+    if (showDeleteDialog.value) {
+        DeleteAlertDialog(
+            onDismiss = { showDeleteDialog.value = false },
+            onConfirm = { deleteMed(meds); showDeleteDialog.value = false },
+            medName = meds.name
+        )
+    }
+
+    val showEditDialog = remember { mutableStateOf(false) }
+    if (showEditDialog.value) {
+        EditAlertDialog(
+            onDismiss = { showEditDialog.value = false },
+            onConfirm = { editMed(meds); showEditDialog.value = false },
+            medName = meds.name
+        )
+    }
 
     SwipeToRevealCard(
         revealState = revealState,
-        onFullSwipe = { deleteMed(meds) },
+        onFullSwipe = {
+            showDeleteDialog.value = true
+            coroutineScope.launch { revealState.animateTo(RevealValue.Covered) }
+        },
         primaryAction = {
-            IconButton(onClick = { editMed(meds) }) {
+            IconButton(onClick = {
+                showEditDialog.value = true
+                coroutineScope.launch { revealState.animateTo(RevealValue.Covered) }
+            }) {
                 Icon(Icons.Default.Edit, "Edit", tint = MaterialTheme.colorScheme.onSecondary)
             }
         },
         secondaryAction = {
-            IconButton(onClick = { deleteMed(meds) }) {
+            IconButton(onClick = {
+                showDeleteDialog.value = true
+                coroutineScope.launch { revealState.animateTo(RevealValue.Covered) }
+            }) {
                 Icon(Icons.Default.Delete, "Delete", tint = MaterialTheme.colorScheme.onError)
             }
         },
