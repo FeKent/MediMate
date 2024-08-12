@@ -67,6 +67,7 @@ import androidx.wear.compose.foundation.RevealValue
 import androidx.wear.compose.foundation.rememberRevealState
 import androidx.wear.compose.material.ExperimentalWearMaterialApi
 import androidx.wear.compose.material.SwipeToRevealCard
+import androidx.wear.compose.material.SwipeToRevealDefaults
 import com.fekent.medimate.R
 import com.fekent.medimate.data.Meds
 import com.fekent.medimate.data.meds
@@ -356,20 +357,26 @@ fun SwipeMedication(
         },
         primaryAction = {
             IconButton(onClick = {
-                showEditDialog.value = true
-                coroutineScope.launch { revealState.animateTo(RevealValue.Covered) }
-            }) {
-                Icon(Icons.Default.Edit, "Edit", tint = MaterialTheme.colorScheme.onSecondary)
-            }
-        },
-        secondaryAction = {
-            IconButton(onClick = {
                 showDeleteDialog.value = true
                 coroutineScope.launch { revealState.animateTo(RevealValue.Covered) }
             }) {
-                Icon(Icons.Default.Delete, "Delete", tint = MaterialTheme.colorScheme.onError)
+                Icon(Icons.Default.Delete, "Delete")
             }
         },
+        secondaryAction = {
+            IconButton(
+                onClick = {
+                    showEditDialog.value = true
+                    coroutineScope.launch { revealState.animateTo(RevealValue.Covered) }
+                },
+            ) {
+                Icon(Icons.Default.Edit, "Edit")
+            }
+        },
+        colors = SwipeToRevealDefaults.actionColors(
+            primaryActionBackgroundColor = MaterialTheme.colorScheme.primary,
+            secondaryActionBackgroundColor = MaterialTheme.colorScheme.primary,
+        ),
         modifier = Modifier
             .padding(horizontal = 30.dp, vertical = 4.dp)
             .background(color = MaterialTheme.colorScheme.primaryContainer),
