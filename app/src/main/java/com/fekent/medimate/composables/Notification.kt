@@ -70,7 +70,7 @@ fun createRefillAlarm(context: Context, med: Meds) {
         putExtra("med_name", med.name)
     }
     val pendingIntent = PendingIntent.getBroadcast(context, med.id, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-    val alarmTime = med.refill.atTime(6, 18).toInstant(ZoneOffset.ofHours(0)).toEpochMilli()
+    val alarmTime = med.refill.atTime(12, 5).toInstant(ZoneOffset.ofHours(0)).toEpochMilli()
 
     alarmManager.setExact(RTC_WAKEUP, alarmTime, pendingIntent)
 }
