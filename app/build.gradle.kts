@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.fekent.medimate"
-        minSdk = 24
+        minSdk = 25
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -52,8 +52,11 @@ android {
 
 dependencies {
 
+
     implementation (libs.accompanist.permissions)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.compose.material)
     ksp(libs.androidx.room.complier)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.room.runtime)

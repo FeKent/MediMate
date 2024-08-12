@@ -1,4 +1,7 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@file:OptIn(
+    ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class,
+    ExperimentalWearMaterialApi::class
+)
 
 package com.fekent.medimate.composables
 
@@ -7,7 +10,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,6 +30,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -54,6 +59,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.wear.compose.foundation.ExperimentalWearFoundationApi
+import androidx.wear.compose.foundation.rememberRevealState
+import androidx.wear.compose.material.ExperimentalWearMaterialApi
+import androidx.wear.compose.material.SwipeToRevealCard
 import com.fekent.medimate.R
 import com.fekent.medimate.data.Meds
 import com.fekent.medimate.data.meds
@@ -196,7 +205,7 @@ private fun LandingScreenUi(
 
             ) {
                 meds.forEach { item ->
-                    MedicationRow(meds = item,
+                    SwipeMedication(meds = item,
                         medication = { medication() },
                         editMed = { editMed(item) },
                         deleteMed = { deleteMed(item) })
@@ -305,55 +314,66 @@ fun MedicationRefill(meds: Meds) {
     }
 }
 
-
-
+@OptIn(ExperimentalWearFoundationApi::class)
 @Composable
-fun MedicationRow(
+fun SwipeMedication(
     meds: Meds,
     medication: () -> Unit,
     editMed: (Meds) -> Unit,
     deleteMed: (Meds) -> Unit
 ) {
-    Column(
+    val revealState = rememberRevealState()
+
+    SwipeToRevealCard(
+        revealState = revealState,
+        onFullSwipe = { deleteMed(meds) },
+        primaryAction = {
+            IconButton(onClick = { editMed(meds) }) {
+                Icon(Icons.Default.Edit, "Edit", tint = MaterialTheme.colorScheme.onSecondary)
+            }
+        },
+        secondaryAction = {
+            IconButton(onClick = { deleteMed(meds) }) {
+                Icon(Icons.Default.Delete, "Delete", tint = MaterialTheme.colorScheme.onError)
+            }
+        },
         modifier = Modifier
             .padding(horizontal = 30.dp, vertical = 4.dp)
-            .background(color = MaterialTheme.colorScheme.primaryContainer)
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(10.dp)
-                .combinedClickable(
-                    onClick = { medication() },
-                    onDoubleClick = { editMed(meds) },
-                    onLongClickLabel = "Delete?",
-                    onLongClick = { deleteMed(meds) })
-                .fillMaxWidth(), horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = meds.name,
-                fontWeight = FontWeight.SemiBold,
-                textAlign = TextAlign.Center,
-                color = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimary else Color(
-                    53,
-                    78,
-                    22
-                ),
-                modifier = Modifier.weight(1f)
-            )
-            VerticalDivider(
+            .background(color = MaterialTheme.colorScheme.primaryContainer),
+        content = {
+            Row(
                 modifier = Modifier
-                    .height(21.dp)
-                    .width(2.dp),
-                color = MaterialTheme.colorScheme.secondary
-            )
-            Text(
-                text = "${meds.dose} mg",
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.secondary,
-                modifier = Modifier.weight(0.5f)
-            )
+                    .padding(10.dp)
+                    .clickable { medication() }
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = meds.name,
+                    fontWeight = FontWeight.SemiBold,
+                    textAlign = TextAlign.Center,
+                    color = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimary else Color(
+                        53,
+                        78,
+                        22
+                    ),
+                    modifier = Modifier.weight(1f)
+                )
+                VerticalDivider(
+                    modifier = Modifier
+                        .height(21.dp)
+                        .width(2.dp),
+                    color = MaterialTheme.colorScheme.secondary
+                )
+                Text(
+                    text = "${meds.dose} mg",
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.secondary,
+                    modifier = Modifier.weight(0.5f)
+                )
+            }
         }
-    }
+    )
 }
 
 
