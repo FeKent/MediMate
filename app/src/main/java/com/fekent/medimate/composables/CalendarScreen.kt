@@ -2,6 +2,8 @@ package com.fekent.medimate.composables
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,6 +19,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -43,6 +46,12 @@ fun CalendarScreen(back: () -> Unit) {
         CalendarBar { back() }
         Spacer(Modifier.size(8.dp))
         CalendarHeader()
+        Spacer(Modifier.size(4.dp))
+        HorizontalDivider(
+            Modifier
+                .padding(horizontal = 30.dp)
+                .background(color = MaterialTheme.colorScheme.primary)
+        )
         Spacer(Modifier.size(24.dp))
         CalendarView(currentDate = LocalDate.now())
     }
@@ -114,13 +123,22 @@ fun CalendarView(currentDate: LocalDate) {
         for (week in rows) {
             Row(Modifier.fillMaxWidth()) {
                 for (day in week) {
+                    val textModifier = if (day.isCurrentMonth) {
+                        Modifier
+                            .weight(1f)
+                            .padding(8.dp)
+                            .clickable { }
+                    } else {
+                        Modifier
+                            .weight(1f)
+                            .padding(8.dp)
+                    }
+
                     Text(
                         text = day.date.dayOfMonth.toString(),
-                        color = if (day.isCurrentMonth) MaterialTheme.colorScheme.onBackground else Color.Gray,
+                        color = if (day.isCurrentMonth) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
                         fontWeight = if (day.isCurrentMonth) FontWeight.SemiBold else FontWeight.Light,
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(8.dp),
+                        modifier = textModifier,
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
