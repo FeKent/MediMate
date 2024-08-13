@@ -55,11 +55,15 @@ fun AddMedsScreen(back: () -> Unit, onMedEntered: (Meds) -> Unit, medToEdit: Med
     var name by remember { mutableStateOf(medToEdit?.name ?: "") }
     var dose by remember { mutableStateOf(medToEdit?.dose?.toString() ?: "") }
     var pillCount by remember { mutableStateOf(medToEdit?.pillCount?.toString() ?: "") }
+
     var isDoneActionTriggered by remember { mutableStateOf(false) }
     var checked by remember { mutableStateOf(false) }
     val keyboardManager = LocalFocusManager.current
     val editMode = medToEdit != null
     val context = LocalContext.current
+
+    val showValidLogState = remember { mutableStateOf(false) }
+    val validationLabel = remember { mutableStateOf("") }
 
     Column(modifier = Modifier.fillMaxSize()) {
         AddMedsBar(back = { back() }, title = "${if (editMode) "Edit" else "Add"} Medication")
@@ -159,6 +163,34 @@ fun AddMedsScreen(back: () -> Unit, onMedEntered: (Meds) -> Unit, medToEdit: Med
 
                 Spacer(Modifier.size(32.dp))
                 IconButton(onClick = {
+
+                    var emptyFieldsCount = 0
+                    if (name.isEmpty()) {
+                        emptyFieldsCount++
+                    }
+                    if (dose.isEmpty()) {
+                        emptyFieldsCount++
+                    }
+                    if (pillCount.isEmpty()) {
+                        emptyFieldsCount++
+                    }
+
+                    validationLabel.value = when (emptyFieldsCount) {
+                        0 -> ""
+                        1 -> when {
+                            name.isEmpty() -> "Name"
+                            dose.isEmpty() -> "Dose"
+                            pillCount.isEmpty() -> "Pill Count"
+                            else -> ""
+                        }
+                        else -> "Multiple"
+                    }
+
+                    if (emptyFieldsCount > 0) {
+                        showValidLogState.value = true
+                        return@IconButton
+                    }
+
                     val newMeds = Meds(
                         id = medToEdit?.id ?: 0,
                         name = name,
@@ -180,6 +212,10 @@ fun AddMedsScreen(back: () -> Unit, onMedEntered: (Meds) -> Unit, medToEdit: Med
                 }
             }
 
+            if (showValidLogState.value) {
+                ValidationDialog(label = validationLabel.value,
+                    onDismiss = { showValidLogState.value = false })
+            }
 
         }
     }

@@ -2,9 +2,9 @@ package com.fekent.medimate.composables
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.wear.compose.material.Text
 
 @Composable
 fun DeleteAlertDialog(onDismiss: () -> Unit, onConfirm: () -> Unit, medName: String) {
@@ -50,9 +50,9 @@ fun ValidationDialog(
     AlertDialog(
         onDismissRequest = { onDismiss() },
         confirmButton = {
-            TextButton(onClick = { onDismiss() }) { androidx.compose.material3.Text(text = "OK") }
+            TextButton(onClick = { onDismiss() }) { Text(text = "OK") }
         }, text = {
-            Text(text = "$label field is not valid")
+            Text(text = "$label field(s) invalid")
         }
     )
 }
