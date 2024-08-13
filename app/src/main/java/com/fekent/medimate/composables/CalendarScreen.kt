@@ -48,11 +48,14 @@ fun CalendarScreen(back: () -> Unit) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CalendarHeader() {
     Row(modifier = Modifier.padding(horizontal = 32.dp)) {
+        val month = LocalDate.now().month
+        val year = LocalDate.now().year.toString()
         Text(
-            text = "August 2024",
+            text = "$month, $year",
             fontSize = 24.sp,
             fontWeight = FontWeight.SemiBold,
             color = MaterialTheme.colorScheme.primary,
