@@ -98,7 +98,7 @@ fun CalendarHeader() {
 @Preview
 @Composable
 private fun CalendarViews() {
-    CalendarView(currentDate = LocalDate.now())
+    CalendarView(currentDate = LocalDate.of(2024, 12, 28))
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -137,8 +137,9 @@ fun CalendarView(currentDate: LocalDate) {
                             .padding(8.dp)
                             .fillMaxHeight()
                             .border(1.dp, color = MaterialTheme.colorScheme.primary)
-                            .wrapContentHeight(align = Alignment.CenterVertically)
                             .clickable { }
+                            .wrapContentHeight(align = Alignment.CenterVertically)
+
 
                     } else {
                         Modifier
