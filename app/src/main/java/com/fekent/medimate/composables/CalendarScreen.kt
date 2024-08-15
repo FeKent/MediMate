@@ -136,7 +136,7 @@ fun CalendarView(currentDate: LocalDate) {
                             .weight(1f)
                             .padding(8.dp)
                             .fillMaxHeight()
-                            .border(1.dp, color = MaterialTheme.colorScheme.primary)
+                            .border(1.dp, color = MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(4.dp))
                             .clickable { }
                             .wrapContentHeight(align = Alignment.CenterVertically)
 
