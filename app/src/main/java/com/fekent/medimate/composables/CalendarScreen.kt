@@ -29,6 +29,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -48,9 +52,14 @@ import java.time.LocalDate
 @Composable
 fun CalendarScreen(back: () -> Unit) {
     Column(modifier = Modifier.fillMaxSize()) {
+        var currentDate by remember { mutableStateOf(LocalDate.now()) }
+
         CalendarBar { back() }
         Spacer(Modifier.size(8.dp))
-        CalendarHeader()
+        CalendarHeader(
+            currentDate = currentDate,
+            previous = { currentDate = currentDate.minusMonths(1) },
+            next = { currentDate = currentDate.plusMonths(1)})
         Spacer(Modifier.size(4.dp))
         HorizontalDivider(
             Modifier
@@ -58,16 +67,16 @@ fun CalendarScreen(back: () -> Unit) {
                 .background(color = MaterialTheme.colorScheme.primary)
         )
         Spacer(Modifier.size(24.dp))
-        CalendarView(currentDate = LocalDate.now())
+        CalendarView(currentDate = currentDate)
     }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CalendarHeader() {
+fun CalendarHeader(currentDate: LocalDate, previous: () -> Unit, next: () -> Unit) {
     Row(modifier = Modifier.padding(horizontal = 32.dp)) {
-        val month = LocalDate.now().month
-        val year = LocalDate.now().year.toString()
+        val month = currentDate.month
+        val year = currentDate.year.toString()
         Text(
             text = "$month, $year",
             fontSize = 24.sp,
@@ -77,14 +86,14 @@ fun CalendarHeader() {
                 .weight(1f)
                 .align(Alignment.CenterVertically)
         )
-        IconButton(onClick = { /*TODO*/ }) {
+        IconButton(onClick = { previous() }) {
             Icon(
                 Icons.AutoMirrored.Filled.ArrowBack,
                 "Previous Month",
                 tint = MaterialTheme.colorScheme.primary
             )
         }
-        IconButton(onClick = { /*TODO*/ }) {
+        IconButton(onClick = { next() }) {
             Icon(
                 Icons.AutoMirrored.Filled.ArrowForward,
                 "Next Month",
@@ -92,13 +101,6 @@ fun CalendarHeader() {
             )
         }
     }
-}
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview
-@Composable
-private fun CalendarViews() {
-    CalendarView(currentDate = LocalDate.of(2024, 12, 28))
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -129,14 +131,21 @@ fun CalendarView(currentDate: LocalDate) {
         // Display days
         val rows = daysInMonth.chunked(7)
         for (week in rows) {
-            Row(Modifier.fillMaxWidth().height(80.dp)) {
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .height(80.dp)) {
                 for (day in week) {
                     val textModifier = if (day.isCurrentMonth) {
                         Modifier
                             .weight(1f)
                             .padding(8.dp)
                             .fillMaxHeight()
-                            .border(1.dp, color = MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(4.dp))
+                            .border(
+                                1.dp,
+                                color = MaterialTheme.colorScheme.primary,
+                                shape = RoundedCornerShape(4.dp)
+                            )
                             .clickable { }
                             .wrapContentHeight(align = Alignment.CenterVertically)
 
@@ -198,4 +207,11 @@ fun CalendarPreview() {
     MediMateTheme {
         CalendarScreen {}
     }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview
+@Composable
+private fun CalendarViews() {
+    CalendarView(currentDate = LocalDate.of(2024, 12, 28))
 }
