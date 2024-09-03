@@ -25,7 +25,12 @@ import com.fekent.medimate.R
 import com.fekent.medimate.data.Meds
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.ZoneId
 import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 import kotlin.random.Random
 
 
@@ -69,10 +74,17 @@ fun createRefillAlarm(context: Context, med: Meds) {
     val intent = Intent(context.applicationContext, RefillAlarmReceiver::class.java).apply {
         putExtra("med_name", med.name)
     }
+    val now = LocalDateTime.now()
     val pendingIntent = PendingIntent.getBroadcast(context, med.id, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-    val alarmTime = med.refill.atTime(12, 5).toInstant(ZoneOffset.ofHours(0)).toEpochMilli()
+    val alarmTime = med.refill.atTime(LocalTime.now().plusMinutes(5)).toInstant(ZoneOffset.systemDefault().rules.getOffset(now)).toEpochMilli()
 
-    alarmManager.setExact(RTC_WAKEUP, alarmTime, pendingIntent)
+    val alarmDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(alarmTime), ZoneId.systemDefault())
+    val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
+
+    // Log the date and time of the alarm
+    Log.d("AlarmTime", "Alarm is set for: ${alarmDateTime.format(formatter)}")
+
+    alarmManager.setExactAndAllowWhileIdle(RTC_WAKEUP, alarmTime, pendingIntent)
 }
 
 

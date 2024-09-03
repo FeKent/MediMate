@@ -254,6 +254,7 @@ fun SettingsScreenUI(
                     NotificationPermission()
                     AlarmPermission()
                 }
+
             }
         }
     }
