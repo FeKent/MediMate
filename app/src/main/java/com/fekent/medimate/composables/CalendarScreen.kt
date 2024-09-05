@@ -47,13 +47,14 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fekent.medimate.data.getDaysInMonth
+import com.fekent.medimate.data.refillDates
 import com.fekent.medimate.ui.theme.MediMateTheme
 import java.time.DayOfWeek
 import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CalendarScreen(back: () -> Unit) {
+fun CalendarScreen(back: () -> Unit, refillDates: List<LocalDate>) {
     Column(modifier = Modifier.fillMaxSize()) {
         var currentDate by remember { mutableStateOf(LocalDate.now()) }
 
@@ -70,7 +71,7 @@ fun CalendarScreen(back: () -> Unit) {
                 .background(color = MaterialTheme.colorScheme.primary)
         )
         Spacer(Modifier.size(24.dp))
-        CalendarView(currentDate = currentDate)
+        CalendarView(currentDate = currentDate, refillDates)
     }
 }
 
@@ -108,7 +109,7 @@ fun CalendarHeader(currentDate: LocalDate, previous: () -> Unit, next: () -> Uni
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CalendarView(currentDate: LocalDate) {
+fun CalendarView(currentDate: LocalDate, refillDates: List<LocalDate>) {
     val year = currentDate.year
     val month = currentDate.monthValue
     val daysInMonth = getDaysInMonth(year, month)
@@ -140,12 +141,21 @@ fun CalendarView(currentDate: LocalDate) {
                     .height(80.dp)
             ) {
                 for (day in week) {
+                    val isRefillDate = day.isCurrentMonth && refillDates.contains(day.date) // Check if the date is in the refillDates
+                    val isToday = day.date == LocalDate.now()
+
+                    val backgroundColor = when {
+                        isToday -> MaterialTheme.colorScheme.primaryContainer // Today's date
+                        isRefillDate -> Color.Blue.copy(alpha = 0.3f) // Refill date background
+                        else -> MaterialTheme.colorScheme.background // Default background
+                    }
+
                     val textModifier = if (day.isCurrentMonth) {
                         Modifier
                             .weight(1f)
                             .padding(8.dp)
                             .fillMaxHeight()
-                            .background(if (day.date == LocalDate.now()) { MaterialTheme.colorScheme.primaryContainer} else {MaterialTheme.colorScheme.background})
+                            .background(backgroundColor)
                             .border(
                                 1.dp,
                                 color = MaterialTheme.colorScheme.primary,
@@ -153,9 +163,6 @@ fun CalendarView(currentDate: LocalDate) {
                             )
                             .clickable { }
                             .wrapContentHeight(align = Alignment.CenterVertically)
-
-
-
                     } else {
                         Modifier
                             .weight(1f)
@@ -166,12 +173,15 @@ fun CalendarView(currentDate: LocalDate) {
 
                     Text(
                         text = day.date.dayOfMonth.toString(),
-                        color = if (day.isCurrentMonth) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
+                        color = when {
+                            day.isCurrentMonth -> MaterialTheme.colorScheme.primary
+                            else -> MaterialTheme.colorScheme.onBackground
+                        },
                         fontWeight = if (day.isCurrentMonth) FontWeight.SemiBold else FontWeight.Light,
                         modifier = textModifier,
                         style = MaterialTheme.typography.bodyMedium,
                         textAlign = TextAlign.Center,
-                        textDecoration = if (day.date == LocalDate.now()) {
+                        textDecoration = if (isToday) {
                             TextDecoration.Underline
                         } else {
                             TextDecoration.None
@@ -217,7 +227,7 @@ fun CalendarBar(back: () -> Unit) {
 @Composable
 fun CalendarPreview() {
     MediMateTheme {
-        CalendarScreen {}
+        CalendarScreen({}, refillDates = refillDates)
     }
 }
 
@@ -225,5 +235,5 @@ fun CalendarPreview() {
 @Preview
 @Composable
 private fun CalendarViews() {
-    CalendarView(currentDate = LocalDate.of(2024, 12, 28))
+    CalendarView(currentDate = LocalDate.of(2024, 9, 28), refillDates = refillDates)
 }

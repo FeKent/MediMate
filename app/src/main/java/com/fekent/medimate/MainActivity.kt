@@ -40,12 +40,14 @@ import com.fekent.medimate.data.UserRepository
 import com.fekent.medimate.ui.theme.MediMateTheme
 import com.fekent.medimate.ui.viewModels.ThemeViewModel
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 
 class MainActivity : ComponentActivity() {
 
     private val themeViewModel: ThemeViewModel by viewModels {
-        ThemeViewModel.Factory(userRepository = UserRepository(dataStore)) }
+        ThemeViewModel.Factory(userRepository = UserRepository(dataStore))
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
 
@@ -70,14 +72,17 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MediMate(navController = rememberNavController(), themeViewModel = themeViewModel)
+                    MediMate(
+                        navController = rememberNavController(),
+                        themeViewModel = themeViewModel
+                    )
 //                    val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 //                    notificationManager.notify(123, builder.build())
-                    }
                 }
             }
         }
     }
+}
 
 
 sealed class Screen(val route: String) {
@@ -113,8 +118,8 @@ fun MediMate(navController: NavHostController, themeViewModel: ThemeViewModel) {
                 addMeds = { navController.navigate(Screen.AddMeds.route) },
                 medication = { navController.navigate(Screen.Medication.route) },
                 meds = meds,
-                editMed = {med -> navController.navigate("EditMeds/${med.id}")},
-                deleteMed = {med -> landingScreenScope.launch { database.medsDao().delete(med) }}
+                editMed = { med -> navController.navigate("EditMeds/${med.id}") },
+                deleteMed = { med -> landingScreenScope.launch { database.medsDao().delete(med) } }
             )
         }
         composable(Screen.Settings.route) {
@@ -171,12 +176,24 @@ fun MediMate(navController: NavHostController, themeViewModel: ThemeViewModel) {
 
         }
         composable(Screen.Calendar.route) {
-            CalendarScreen(back = {
-                navController.popBackStack(
-                    Screen.Landing.route,
-                    inclusive = false
-                )
-            })
+            val calendarScope = rememberCoroutineScope()
+            val refillDates = remember { mutableStateOf<List<LocalDate>>(emptyList()) }
+
+           LaunchedEffect(Unit) {
+               calendarScope.launch {
+                   val dates = database.medsDao().getOrderedRefillDates()
+                   refillDates.value = dates
+               }
+           }
+
+            CalendarScreen(
+                back = {
+                    navController.popBackStack(
+                        Screen.Landing.route,
+                        inclusive = false
+                    )
+                }, refillDates = refillDates.value
+            )
         }
         composable(Screen.Medication.route) {
             MedicationScreen(back = {

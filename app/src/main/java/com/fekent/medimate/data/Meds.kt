@@ -23,3 +23,9 @@ val meds = listOf(
     Meds(3,"Sertraline", 100, 28, LocalDate.of(2024, 11, 28)),
     Meds(4, "Sertraline", 100, 28, LocalDate.of(2024, 8, 17)),
 )
+
+@RequiresApi(Build.VERSION_CODES.O)
+val refillDates = listOf<LocalDate>(
+    LocalDate.of(2024, 9, 12),
+    LocalDate.of(2024, 9, 23)
+)

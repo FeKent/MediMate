@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
 
 @Dao
 interface MedsDao {
@@ -23,4 +24,7 @@ interface MedsDao {
 
     @Query("SELECT * FROM meds WHERE meds.id = :medsId LIMIT 1")
     suspend fun getMeds(medsId: Int): Meds
+
+    @Query("SELECT refill FROM meds ORDER BY refill ASC")
+    suspend fun getOrderedRefillDates(): List<LocalDate>
 }
