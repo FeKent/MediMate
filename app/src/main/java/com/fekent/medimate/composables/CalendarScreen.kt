@@ -39,8 +39,11 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fekent.medimate.data.getDaysInMonth
@@ -59,7 +62,7 @@ fun CalendarScreen(back: () -> Unit) {
         CalendarHeader(
             currentDate = currentDate,
             previous = { currentDate = currentDate.minusMonths(1) },
-            next = { currentDate = currentDate.plusMonths(1)})
+            next = { currentDate = currentDate.plusMonths(1) })
         Spacer(Modifier.size(4.dp))
         HorizontalDivider(
             Modifier
@@ -134,13 +137,15 @@ fun CalendarView(currentDate: LocalDate) {
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .height(80.dp)) {
+                    .height(80.dp)
+            ) {
                 for (day in week) {
                     val textModifier = if (day.isCurrentMonth) {
                         Modifier
                             .weight(1f)
                             .padding(8.dp)
                             .fillMaxHeight()
+                            .background(if (day.date == LocalDate.now()) { MaterialTheme.colorScheme.primaryContainer} else {MaterialTheme.colorScheme.background})
                             .border(
                                 1.dp,
                                 color = MaterialTheme.colorScheme.primary,
@@ -148,6 +153,7 @@ fun CalendarView(currentDate: LocalDate) {
                             )
                             .clickable { }
                             .wrapContentHeight(align = Alignment.CenterVertically)
+
 
 
                     } else {
@@ -165,6 +171,12 @@ fun CalendarView(currentDate: LocalDate) {
                         modifier = textModifier,
                         style = MaterialTheme.typography.bodyMedium,
                         textAlign = TextAlign.Center,
+                        textDecoration = if (day.date == LocalDate.now()) {
+                            TextDecoration.Underline
+                        } else {
+                            TextDecoration.None
+                        },
+                        lineHeight = TextUnit(50f, TextUnitType.Sp),
                     )
                 }
             }

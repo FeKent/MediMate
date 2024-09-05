@@ -76,7 +76,7 @@ fun createRefillAlarm(context: Context, med: Meds) {
     }
     val now = LocalDateTime.now()
     val pendingIntent = PendingIntent.getBroadcast(context, med.id, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-    val alarmTime = med.refill.atTime(LocalTime.now().plusMinutes(5)).toInstant(ZoneOffset.systemDefault().rules.getOffset(now)).toEpochMilli()
+    val alarmTime = med.refill.atTime(LocalTime.now().plusMinutes(2)).toInstant(ZoneOffset.systemDefault().rules.getOffset(now)).toEpochMilli()
 
     val alarmDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(alarmTime), ZoneId.systemDefault())
     val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
