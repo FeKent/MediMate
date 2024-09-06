@@ -30,6 +30,11 @@ android {
         debug{
         buildConfigField("boolean", "ENABLE_DEVELOPER_OPTIONS", "true")
     }
+        create("staging"){
+            initWith(getByName("debug"))
+            buildConfigField("boolean", "ENABLE_DEVELOPER_OPTIONS", "false")
+        }
+
         release {
             buildConfigField("boolean", "ENABLE_DEVELOPER_OPTIONS", "false")
             isMinifyEnabled = false
