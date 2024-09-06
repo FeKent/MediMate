@@ -21,8 +21,17 @@ android {
         }
     }
 
+    buildFeatures{
+        compose = true
+        buildConfig = true
+    }
+
     buildTypes {
+        debug{
+        buildConfigField("boolean", "ENABLE_DEVELOPER_OPTIONS", "true")
+    }
         release {
+            buildConfigField("boolean", "ENABLE_DEVELOPER_OPTIONS", "false")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),

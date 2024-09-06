@@ -52,6 +52,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.fekent.medimate.BuildConfig
 import com.fekent.medimate.R
 import com.fekent.medimate.ui.theme.MediMateTheme
 import com.fekent.medimate.ui.viewModels.AppViewModel
@@ -244,17 +245,20 @@ fun SettingsScreenUI(
                     enabled = false
                 )
             }
-            Spacer(Modifier.size(30.dp))
-            Row(
-                modifier = Modifier
-                    .padding(horizontal = 40.dp)
-                    .fillMaxWidth()
-            ) {
-                if (!isPreview && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    NotificationPermission()
-                    AlarmPermission()
-                }
 
+            if (BuildConfig.ENABLE_DEVELOPER_OPTIONS){
+                Spacer(Modifier.size(30.dp))
+                Row(
+                    modifier = Modifier
+                        .padding(horizontal = 40.dp)
+                        .fillMaxWidth()
+                ) {
+                    if (!isPreview && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        NotificationPermission()
+                        AlarmPermission()
+                    }
+
+                }
             }
         }
     }
