@@ -141,7 +141,8 @@ fun CalendarView(currentDate: LocalDate, refillDates: List<LocalDate>) {
                     .height(80.dp)
             ) {
                 for (day in week) {
-                    val isRefillDate = day.isCurrentMonth && refillDates.contains(day.date) // Check if the date is in the refillDates
+                    val isRefillDate =
+                        day.isCurrentMonth && refillDates.contains(day.date) // Check if the date is in the refillDates
                     val isToday = day.date == LocalDate.now()
 
                     val backgroundColor = when {
