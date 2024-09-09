@@ -178,6 +178,7 @@ fun MediMate(navController: NavHostController, themeViewModel: ThemeViewModel) {
         composable(Screen.Calendar.route) {
             val calendarScope = rememberCoroutineScope()
             val refillDates = remember { mutableStateOf<List<LocalDate>>(emptyList()) }
+            val meds by database.medsDao().allMeds().collectAsState(initial = emptyList())
 
            LaunchedEffect(Unit) {
                calendarScope.launch {
@@ -192,7 +193,7 @@ fun MediMate(navController: NavHostController, themeViewModel: ThemeViewModel) {
                         Screen.Landing.route,
                         inclusive = false
                     )
-                }, refillDates = refillDates.value
+                }, refillDates = refillDates.value, meds = meds
             )
         }
         composable(Screen.Medication.route) {

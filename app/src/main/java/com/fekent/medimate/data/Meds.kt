@@ -27,5 +27,10 @@ val meds = listOf(
 @RequiresApi(Build.VERSION_CODES.O)
 val refillDates = listOf<LocalDate>(
     LocalDate.of(2024, 9, 12),
-    LocalDate.of(2024, 9, 23)
+    LocalDate.of(2024, 9, 23),
+    LocalDate.of(2024, 6, 10),
+    LocalDate.of(2024, 4, 2),
+    LocalDate.of(2024, 7, 30),
+    LocalDate.of(2024, 11, 28),
+    LocalDate.of(2024, 8, 17)
 )

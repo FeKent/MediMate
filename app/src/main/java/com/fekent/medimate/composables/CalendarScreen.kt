@@ -52,7 +52,9 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.fekent.medimate.data.Meds
 import com.fekent.medimate.data.getDaysInMonth
+import com.fekent.medimate.data.meds
 import com.fekent.medimate.data.refillDates
 import com.fekent.medimate.ui.theme.MediMateTheme
 import kotlinx.coroutines.launch
@@ -61,7 +63,7 @@ import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CalendarScreen(back: () -> Unit, refillDates: List<LocalDate>) {
+fun CalendarScreen(back: () -> Unit, refillDates: List<LocalDate>, meds: List<Meds>) {
     Column(modifier = Modifier.fillMaxSize()) {
         var currentDate by remember { mutableStateOf(LocalDate.now()) }
 
@@ -78,7 +80,7 @@ fun CalendarScreen(back: () -> Unit, refillDates: List<LocalDate>) {
                 .background(color = MaterialTheme.colorScheme.primary)
         )
         Spacer(Modifier.size(24.dp))
-        CalendarView(currentDate = currentDate, refillDates)
+        CalendarView(currentDate = currentDate, refillDates = refillDates, meds = meds)
     }
 }
 
@@ -117,7 +119,7 @@ fun CalendarHeader(currentDate: LocalDate, previous: () -> Unit, next: () -> Uni
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CalendarView(currentDate: LocalDate, refillDates: List<LocalDate>) {
+fun CalendarView(currentDate: LocalDate, refillDates: List<LocalDate>, meds: List<Meds>) {
     val year = currentDate.year
     val month = currentDate.monthValue
     val daysInMonth = getDaysInMonth(year, month)
@@ -125,14 +127,30 @@ fun CalendarView(currentDate: LocalDate, refillDates: List<LocalDate>) {
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
+    var selectedMed by remember { mutableStateOf<Meds?>(null) }
 
     if (showBottomSheet) {
         ModalBottomSheet(onDismissRequest = { showBottomSheet = false }, sheetState = sheetState) {
-            Button(onClick = {
-                scope.launch { sheetState.hide() }.invokeOnCompletion {
-                    if (!sheetState.isVisible){ showBottomSheet = false }}
-            }) {
-                Text(text = "Hide Bottom Sheet")
+            selectedMed?.let { med -> // Display details only if a medication is selected
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(text = "Medication Details")
+                    Text(text = "Name: ${med.name}")
+                    Text(text = "Next Refill: ${med.refill}")
+                    Text(text = "Dosage: ${med.dose}")
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Button(onClick = {
+                        scope.launch { sheetState.hide() }.invokeOnCompletion {
+                            if (!sheetState.isVisible) {
+                                showBottomSheet = false
+                                selectedMed = null // Clear the selected medication when closing
+                            }
+                        }
+                    }) {
+                        Text(text = "Hide Bottom Sheet")
+                    }
+                }
             }
         }
     }
@@ -176,7 +194,8 @@ fun CalendarView(currentDate: LocalDate, refillDates: List<LocalDate>) {
                     }
 
                     val textModifier = when {
-                        isRefillDate -> Modifier.weight(1f)
+                        isRefillDate -> Modifier
+                            .weight(1f)
                             .padding(8.dp)
                             .fillMaxHeight()
                             .background(backgroundColor)
@@ -185,9 +204,19 @@ fun CalendarView(currentDate: LocalDate, refillDates: List<LocalDate>) {
                                 color = MaterialTheme.colorScheme.primary,
                                 shape = RoundedCornerShape(4.dp)
                             )
-                            .clickable { showBottomSheet = true }
+                            .clickable {
+                                val associatedMed =
+                                    meds.find { med -> med.refill == day.date }
+                                if (associatedMed != null) {
+                                    selectedMed = associatedMed
+                                    showBottomSheet = true
+                                    scope.launch { sheetState.show() }
+                                }
+                            }
                             .wrapContentHeight(align = Alignment.CenterVertically)
-                        day.isCurrentMonth -> Modifier.weight(1f)
+
+                        day.isCurrentMonth -> Modifier
+                            .weight(1f)
                             .padding(8.dp)
                             .fillMaxHeight()
                             .background(backgroundColor)
@@ -197,35 +226,13 @@ fun CalendarView(currentDate: LocalDate, refillDates: List<LocalDate>) {
                                 shape = RoundedCornerShape(4.dp)
                             )
                             .wrapContentHeight(align = Alignment.CenterVertically)
-                        else -> Modifier.weight(1f)
+
+                        else -> Modifier
+                            .weight(1f)
                             .padding(8.dp)
                             .fillMaxHeight()
                             .wrapContentHeight(align = Alignment.CenterVertically)
                     }
-
-
-
-//                        if (day.isCurrentMonth) {
-//                        Modifier
-//                            .weight(1f)
-//                            .padding(8.dp)
-//                            .fillMaxHeight()
-//                            .background(backgroundColor)
-//                            .border(
-//                                1.dp,
-//                                color = MaterialTheme.colorScheme.primary,
-//                                shape = RoundedCornerShape(4.dp)
-//                            )
-//                            .clickable { showBottomSheet = true }
-//                            .wrapContentHeight(align = Alignment.CenterVertically)
-//                    } else {
-//                        Modifier
-//                            .weight(1f)
-//                            .padding(8.dp)
-//                            .fillMaxHeight()
-//                            .wrapContentHeight(align = Alignment.CenterVertically)
-//                    }
-
                     Text(
                         text = day.date.dayOfMonth.toString(),
                         color = when {
@@ -282,7 +289,7 @@ fun CalendarBar(back: () -> Unit) {
 @Composable
 fun CalendarPreview() {
     MediMateTheme {
-        CalendarScreen({}, refillDates = refillDates)
+        CalendarScreen({}, refillDates = refillDates, meds = meds)
     }
 }
 
@@ -290,5 +297,5 @@ fun CalendarPreview() {
 @Preview
 @Composable
 private fun CalendarViews() {
-    CalendarView(currentDate = LocalDate.of(2024, 9, 28), refillDates = refillDates)
+    CalendarView(currentDate = LocalDate.of(2024, 9, 28), refillDates = refillDates, meds = meds)
 }
