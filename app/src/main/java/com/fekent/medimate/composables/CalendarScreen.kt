@@ -175,9 +175,8 @@ fun CalendarView(currentDate: LocalDate, refillDates: List<LocalDate>) {
                         else -> MaterialTheme.colorScheme.background // Default background
                     }
 
-                    val textModifier = if (day.isCurrentMonth) {
-                        Modifier
-                            .weight(1f)
+                    val textModifier = when {
+                        isRefillDate -> Modifier.weight(1f)
                             .padding(8.dp)
                             .fillMaxHeight()
                             .background(backgroundColor)
@@ -188,13 +187,44 @@ fun CalendarView(currentDate: LocalDate, refillDates: List<LocalDate>) {
                             )
                             .clickable { showBottomSheet = true }
                             .wrapContentHeight(align = Alignment.CenterVertically)
-                    } else {
-                        Modifier
-                            .weight(1f)
+                        day.isCurrentMonth -> Modifier.weight(1f)
+                            .padding(8.dp)
+                            .fillMaxHeight()
+                            .background(backgroundColor)
+                            .border(
+                                1.dp,
+                                color = MaterialTheme.colorScheme.primary,
+                                shape = RoundedCornerShape(4.dp)
+                            )
+                            .wrapContentHeight(align = Alignment.CenterVertically)
+                        else -> Modifier.weight(1f)
                             .padding(8.dp)
                             .fillMaxHeight()
                             .wrapContentHeight(align = Alignment.CenterVertically)
                     }
+
+
+
+//                        if (day.isCurrentMonth) {
+//                        Modifier
+//                            .weight(1f)
+//                            .padding(8.dp)
+//                            .fillMaxHeight()
+//                            .background(backgroundColor)
+//                            .border(
+//                                1.dp,
+//                                color = MaterialTheme.colorScheme.primary,
+//                                shape = RoundedCornerShape(4.dp)
+//                            )
+//                            .clickable { showBottomSheet = true }
+//                            .wrapContentHeight(align = Alignment.CenterVertically)
+//                    } else {
+//                        Modifier
+//                            .weight(1f)
+//                            .padding(8.dp)
+//                            .fillMaxHeight()
+//                            .wrapContentHeight(align = Alignment.CenterVertically)
+//                    }
 
                     Text(
                         text = day.date.dayOfMonth.toString(),
