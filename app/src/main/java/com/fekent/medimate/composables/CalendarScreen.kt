@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.fekent.medimate.composables
 
 import android.os.Build
@@ -21,17 +23,21 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,6 +55,7 @@ import androidx.compose.ui.unit.sp
 import com.fekent.medimate.data.getDaysInMonth
 import com.fekent.medimate.data.refillDates
 import com.fekent.medimate.ui.theme.MediMateTheme
+import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalDate
 
@@ -107,12 +114,29 @@ fun CalendarHeader(currentDate: LocalDate, previous: () -> Unit, next: () -> Uni
     }
 }
 
+
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CalendarView(currentDate: LocalDate, refillDates: List<LocalDate>) {
     val year = currentDate.year
     val month = currentDate.monthValue
     val daysInMonth = getDaysInMonth(year, month)
+
+    val sheetState = rememberModalBottomSheetState()
+    val scope = rememberCoroutineScope()
+    var showBottomSheet by remember { mutableStateOf(false) }
+
+    if (showBottomSheet) {
+        ModalBottomSheet(onDismissRequest = { showBottomSheet = false }, sheetState = sheetState) {
+            Button(onClick = {
+                scope.launch { sheetState.hide() }.invokeOnCompletion {
+                    if (!sheetState.isVisible){ showBottomSheet = false }}
+            }) {
+                Text(text = "Hide Bottom Sheet")
+            }
+        }
+    }
+
 
     Column(modifier = Modifier.padding(horizontal = 16.dp)) {
         // Display day headers
@@ -162,7 +186,7 @@ fun CalendarView(currentDate: LocalDate, refillDates: List<LocalDate>) {
                                 color = MaterialTheme.colorScheme.primary,
                                 shape = RoundedCornerShape(4.dp)
                             )
-                            .clickable { }
+                            .clickable { showBottomSheet = true }
                             .wrapContentHeight(align = Alignment.CenterVertically)
                     } else {
                         Modifier
