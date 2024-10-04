@@ -22,8 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -132,24 +131,19 @@ fun CalendarView(currentDate: LocalDate, refillDates: List<LocalDate>, meds: Lis
     if (showBottomSheet) {
         ModalBottomSheet(onDismissRequest = { showBottomSheet = false }, sheetState = sheetState) {
             selectedMed?.let { med -> // Display details only if a medication is selected
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(text = "Medication Details")
-                    Text(text = "Name: ${med.name}")
-                    Text(text = "Next Refill: ${med.refill}")
-                    Text(text = "Dosage: ${med.dose}")
+                Column(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "${med.name}: ${med.dose}mg", fontSize = 24.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
 
                     Spacer(modifier = Modifier.height(16.dp))
-
-                    Button(onClick = {
-                        scope.launch { sheetState.hide() }.invokeOnCompletion {
-                            if (!sheetState.isVisible) {
-                                showBottomSheet = false
-                                selectedMed = null // Clear the selected medication when closing
-                            }
-                        }
-                    }) {
-                        Text(text = "Hide Bottom Sheet")
-                    }
                 }
             }
         }
@@ -269,10 +263,10 @@ fun CalendarBar(back: () -> Unit) {
             overflow = TextOverflow.Ellipsis,
             color = MaterialTheme.colorScheme.primary
         )
-    }, navigationIcon = {
+    }, actions = {
         IconButton(onClick = { back() }) {
             Icon(
-                Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 "Back",
                 tint = MaterialTheme.colorScheme.secondary,
                 modifier = Modifier.size(60.dp)
