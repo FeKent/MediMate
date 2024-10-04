@@ -126,24 +126,25 @@ fun CalendarView(currentDate: LocalDate, refillDates: List<LocalDate>, meds: Lis
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
-    var selectedMed by remember { mutableStateOf<Meds?>(null) }
+    var selectedMeds by remember { mutableStateOf<List<Meds?>>(emptyList()) }
 
     if (showBottomSheet) {
         ModalBottomSheet(onDismissRequest = { showBottomSheet = false }, sheetState = sheetState) {
-            selectedMed?.let { med -> // Display details only if a medication is selected
+            if (selectedMeds.isNotEmpty()) {
                 Column(
                     modifier = Modifier
                         .padding(16.dp)
                         .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(
-                        text = "${med.name}: ${med.dose}mg", fontSize = 24.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
+                    selectedMeds.forEach { med -> // Loop through selected meds and display them
+                        Text(
+                            text = "${med?.name}: ${med?.dose}mg", fontSize = 24.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
                 }
             }
         }
@@ -199,13 +200,12 @@ fun CalendarView(currentDate: LocalDate, refillDates: List<LocalDate>, meds: Lis
                                 shape = RoundedCornerShape(4.dp)
                             )
                             .clickable {
-                                val associatedMed =
-                                    meds.find { med -> med.refill == day.date }
-                                if (associatedMed != null) {
-                                    selectedMed = associatedMed
+                                val associatedMeds: List<Meds?> =
+                                    meds.filter { med -> med.refill == day.date }
+                                    selectedMeds = selectedMeds + associatedMeds
                                     showBottomSheet = true
                                     scope.launch { sheetState.show() }
-                                }
+
                             }
                             .wrapContentHeight(align = Alignment.CenterVertically)
 
