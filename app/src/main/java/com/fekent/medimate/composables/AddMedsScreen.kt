@@ -159,7 +159,7 @@ fun AddMedsScreen(back: () -> Unit, onMedEntered: (Meds) -> Unit, medToEdit: Med
 
                 Row {
                     Text(
-                        text = "Meds Used By:",
+                        text = "Med Supply Ends:",
                         fontSize = 16.sp,
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.align(Alignment.CenterVertically)
