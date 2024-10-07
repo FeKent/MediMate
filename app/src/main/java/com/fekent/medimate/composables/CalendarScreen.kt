@@ -183,8 +183,8 @@ fun CalendarView(currentDate: LocalDate, refillDates: List<LocalDate>, meds: Lis
                     val isToday = day.date == LocalDate.now()
 
                     val backgroundColor = when {
-                        isToday -> MaterialTheme.colorScheme.primaryContainer // Today's date
-                        isRefillDate -> Color.Blue.copy(alpha = 0.3f) // Refill date background
+                        isToday -> MaterialTheme.colorScheme.primary // Today's date
+                        isRefillDate -> MaterialTheme.colorScheme.primaryContainer // Refill date background
                         else -> MaterialTheme.colorScheme.background // Default background
                     }
 
@@ -231,6 +231,7 @@ fun CalendarView(currentDate: LocalDate, refillDates: List<LocalDate>, meds: Lis
                     Text(
                         text = day.date.dayOfMonth.toString(),
                         color = when {
+                            isToday -> MaterialTheme.colorScheme.background
                             day.isCurrentMonth -> MaterialTheme.colorScheme.primary
                             else -> MaterialTheme.colorScheme.onBackground
                         },
