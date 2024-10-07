@@ -57,7 +57,9 @@ fun AddMedsScreen(back: () -> Unit, onMedEntered: (Meds) -> Unit, medToEdit: Med
     var pillCount by remember { mutableStateOf(medToEdit?.pillCount?.toString() ?: "") }
 
     var isDoneActionTriggered by remember { mutableStateOf(false) }
-    var checked by remember { mutableStateOf(false) }
+    var refillChecked by remember { mutableStateOf(false) }
+    var dailyChecked by remember { mutableStateOf(false) }
+    var neededChecked by remember { mutableStateOf(false) }
     val keyboardManager = LocalFocusManager.current
     val editMode = medToEdit != null
     val context = LocalContext.current
@@ -102,10 +104,58 @@ fun AddMedsScreen(back: () -> Unit, onMedEntered: (Meds) -> Unit, medToEdit: Med
                 })
             )
             Spacer(Modifier.size(16.dp))
-            if (pillCount.isNotEmpty() && isDoneActionTriggered) {
-                val dateEntered = remember { LocalDate.now() }
-                val refillDate = dateEntered.plusDays(pillCount.toLongOrNull() ?: 0)
-                val formattedDate = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(refillDate)
+
+
+            if (!neededChecked) { // Show only if 'As Needed Medication' is not checked
+                Row {
+                    Text(
+                        text = "Medication Prescribed Daily?", fontSize = 22.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.align(Alignment.CenterVertically)
+                    )
+                    Checkbox(
+                        checked = dailyChecked,
+                        onCheckedChange = {
+                            dailyChecked = it
+                            if (it) neededChecked = false // Uncheck 'As Needed' checkbox when 'Daily' is checked
+                        },
+                        colors = CheckboxDefaults.colors(uncheckedColor = MaterialTheme.colorScheme.primary)
+                    )
+                }
+            }
+
+            // Row for the "As Needed Medication" checkbox
+            if (!dailyChecked) { // Show only if 'Medication Prescribed Daily' is not checked
+                Row {
+                    Text(
+                        text = "As Needed Medication?", fontSize = 22.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.align(Alignment.CenterVertically)
+                    )
+                    Checkbox(
+                        checked = neededChecked,
+                        onCheckedChange = {
+                            neededChecked = it
+                            if (it) dailyChecked = false // Uncheck 'Daily' checkbox when 'As Needed' is checked
+                        },
+                        colors = CheckboxDefaults.colors(uncheckedColor = MaterialTheme.colorScheme.primary)
+                    )
+                }
+            }
+
+
+            Spacer(Modifier.size(16.dp))
+            val dateEntered = remember { LocalDate.now() }
+            val refillDate = dateEntered.plusDays(pillCount.toLongOrNull() ?: 0)
+            val formattedDate = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(refillDate)
+            val orderRefill = minusWorkingDays(7, refillDate)
+            val formattedOrderRefill =
+                DateTimeFormatter.ofPattern("dd/MM/yyyy").format(orderRefill)
+
+
+            if (pillCount.isNotEmpty() && isDoneActionTriggered && dailyChecked) {
 
                 Row {
                     Text(
@@ -132,17 +182,14 @@ fun AddMedsScreen(back: () -> Unit, onMedEntered: (Meds) -> Unit, medToEdit: Med
                         modifier = Modifier.align(Alignment.CenterVertically)
                     )
                     Checkbox(
-                        checked = checked,
-                        onCheckedChange = { checked = it },
+                        checked = refillChecked,
+                        onCheckedChange = { refillChecked = it },
                         colors = CheckboxDefaults.colors(uncheckedColor = MaterialTheme.colorScheme.primary)
                     )
                 }
 
-                val orderRefill = minusWorkingDays(7, refillDate)
-                val formattedOrderRefill =
-                    DateTimeFormatter.ofPattern("dd/MM/yyyy").format(orderRefill)
 
-                if (checked) {
+                if (refillChecked) {
                     Spacer(Modifier.size(16.dp))
                     Row {
                         Text(
@@ -160,66 +207,68 @@ fun AddMedsScreen(back: () -> Unit, onMedEntered: (Meds) -> Unit, medToEdit: Med
                         )
                     }
                 }
+            }
 
-                Spacer(Modifier.size(32.dp))
-                IconButton(onClick = {
+            Spacer(Modifier.size(32.dp))
+            IconButton(onClick = {
 
-                    var emptyFieldsCount = 0
-                    if (name.isEmpty()) {
-                        emptyFieldsCount++
-                    }
-                    if (dose.isEmpty()) {
-                        emptyFieldsCount++
-                    }
-                    if (pillCount.isEmpty()) {
-                        emptyFieldsCount++
-                    }
-
-                    validationLabel.value = when (emptyFieldsCount) {
-                        0 -> ""
-                        1 -> when {
-                            name.isEmpty() -> "Name"
-                            dose.isEmpty() -> "Dose"
-                            pillCount.isEmpty() -> "Pill Count"
-                            else -> ""
-                        }
-                        else -> "Multiple"
-                    }
-
-                    if (emptyFieldsCount > 0) {
-                        showValidLogState.value = true
-                        return@IconButton
-                    }
-
-                    val newMeds = Meds(
-                        id = medToEdit?.id ?: 0,
-                        name = name,
-                        dose = dose.toInt(),
-                        pillCount = pillCount.toInt(),
-                        refill = if (checked) orderRefill else refillDate
-                    )
-                    onMedEntered.invoke(newMeds)
-                    if (checked) {
-                        createRefillAlarm(context.applicationContext, newMeds)
-                    }
-                }) {
-                    Icon(
-                        Icons.Filled.AddCircle,
-                        "Save Button",
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(60.dp)
-                    )
+                var emptyFieldsCount = 0
+                if (name.isEmpty()) {
+                    emptyFieldsCount++
                 }
-            }
+                if (dose.isEmpty()) {
+                    emptyFieldsCount++
+                }
+                if (pillCount.isEmpty()) {
+                    emptyFieldsCount++
+                }
 
-            if (showValidLogState.value) {
-                ValidationDialog(label = validationLabel.value,
-                    onDismiss = { showValidLogState.value = false })
-            }
+                validationLabel.value = when (emptyFieldsCount) {
+                    0 -> ""
+                    1 -> when {
+                        name.isEmpty() -> "Name"
+                        dose.isEmpty() -> "Dose"
+                        pillCount.isEmpty() -> "Pill Count"
+                        else -> ""
+                    }
 
+                    else -> "Multiple"
+                }
+
+                if (emptyFieldsCount > 0) {
+                    showValidLogState.value = true
+                    return@IconButton
+                }
+
+                val newMeds = Meds(
+                    id = medToEdit?.id ?: 0,
+                    name = name,
+                    dose = dose.toInt(),
+                    pillCount = pillCount.toInt(),
+                    refill = if (refillChecked) orderRefill else refillDate
+                )
+                onMedEntered.invoke(newMeds)
+                if (refillChecked) {
+                    createRefillAlarm(context.applicationContext, newMeds)
+                }
+            }) {
+                Icon(
+                    Icons.Filled.AddCircle,
+                    "Save Button",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(60.dp)
+                )
+            }
         }
+
+        if (showValidLogState.value) {
+            ValidationDialog(label = validationLabel.value,
+                onDismiss = { showValidLogState.value = false })
+        }
+
     }
 }
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun minusWorkingDays(days: Int, date: LocalDate): LocalDate {
@@ -236,8 +285,6 @@ fun minusWorkingDays(days: Int, date: LocalDate): LocalDate {
     }
     return refillDate
 }
-
-
 
 
 @OptIn(ExperimentalMaterial3Api::class)
