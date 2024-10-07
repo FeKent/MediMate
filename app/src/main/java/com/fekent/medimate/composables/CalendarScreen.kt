@@ -200,6 +200,7 @@ fun CalendarView(currentDate: LocalDate, refillDates: List<LocalDate>, meds: Lis
                                 shape = RoundedCornerShape(4.dp)
                             )
                             .clickable {
+                                selectedMeds = emptyList()
                                 val associatedMeds: List<Meds?> =
                                     meds.filter { med -> med.refill == day.date }
                                     selectedMeds = selectedMeds + associatedMeds
